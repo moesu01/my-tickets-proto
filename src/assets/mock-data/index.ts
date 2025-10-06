@@ -35,6 +35,22 @@ export const mockTickets: Ticket[] = [
     status: "upcoming"
   },
   {
+    id: 8,
+    eventName: "Mach-HOMMY",
+    eventSeries: "Three Peat",
+    venue: "Le Poisson Rouge",
+    location: "New York, NY",
+    ticketType: "GA Tier 2",
+    date: "2025-10-10",
+    time: "11:00 → 3:00AM",
+    admitCount: 1,
+    ticketId: "012390zzv9a0d9f88",
+    qrCode: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI2ZmZiIvPjx0ZXh0IHg9IjYwIiB5PSI2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSIjMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5RUiBDb2RlPC90ZXh0Pjwvc3ZnPg==",
+    eventImage: `${process.env.PUBLIC_URL}/design/mach-hommy.png`,
+    theme: "red",
+    status: "waitlisted"
+  },
+  {
     id: 3,
     eventName: "GIMME",
     eventSeries: "GIMME",

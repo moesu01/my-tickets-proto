@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, IconButton, Typography, Container } from '@mui/material';
-import { Search, Person, ShoppingCart } from '@mui/icons-material';
+import { Box, IconButton, Typography, Container, Button } from '@mui/material';
+import { Person, ShoppingCart } from '@mui/icons-material';
 
 const Navbar: React.FC = () => {
   return (
@@ -9,7 +9,7 @@ const Navbar: React.FC = () => {
         position: 'sticky',
         top: 0,
         zIndex: 1000,
-        py: 1.5, // 12px vertical padding
+        py: 1, // 8px vertical padding
       }}
     >
       <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3 } }}>
@@ -37,54 +37,52 @@ const Navbar: React.FC = () => {
           </Box>
 
           {/* Action Buttons */}
-          <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
-            <IconButton 
-              color="inherit" 
-              sx={{ 
+          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+            <Button
+              variant="text"
+              startIcon={<Person />}
+              sx={{
                 color: '#718096',
-                padding: '4px',
                 borderRadius: '8px',
+                padding: '8px 12px',
+                textTransform: 'none',
+                fontSize: '14px',
+                fontWeight: 500,
                 '&:hover': {
                   backgroundColor: 'rgba(0, 0, 0, 0.04)',
                   color: '#333'
                 }
               }}
-              aria-label="Search"
             >
-              <Search />
-            </IconButton>
+              Log out
+            </Button>
             
-            <IconButton 
-              color="inherit" 
-              sx={{ 
+            <Typography
+              sx={{
                 color: '#718096',
-                padding: '4px',
-                borderRadius: '8px',
-                '&:hover': {
-                  backgroundColor: 'rgba(0, 0, 0, 0.04)',
-                  color: '#333'
-                }
+                fontSize: '16px',
+                fontWeight: 400,
+                mx: 1
               }}
-              aria-label="Profile"
             >
-              <Person />
-            </IconButton>
+              |
+            </Typography>
             
-            <IconButton 
-              color="inherit" 
-              sx={{ 
+            <Button
+              variant="text"
+              sx={{
                 color: '#718096',
-                padding: '4px',
                 borderRadius: '8px',
+                padding: '8px',
+                minWidth: 'auto',
                 '&:hover': {
                   backgroundColor: 'rgba(0, 0, 0, 0.04)',
                   color: '#333'
                 }
               }}
-              aria-label="Shopping Cart"
             >
               <ShoppingCart />
-            </IconButton>
+            </Button>
           </Box>
         </Box>
       </Container>

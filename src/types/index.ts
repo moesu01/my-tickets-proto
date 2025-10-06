@@ -14,7 +14,7 @@ export interface Ticket {
   qrCode: string;
   eventImage: string;
   theme: string;
-  status: 'upcoming' | 'past' | 'cancelled' | 'refunded' | 'transferred';
+  status: 'upcoming' | 'past' | 'cancelled' | 'refunded' | 'transferred' | 'waitlisted';
 }
 
 export interface WaitlistItem {
@@ -50,6 +50,7 @@ export interface TicketCardProps {
   onWaitlist?: (ticketId: string) => void;
   onDownloadQR?: (ticketId: string) => void;
   onReceipt?: (ticketId: string) => void;
+  onRemoveFromWaitlist?: (ticketId: string) => void;
 }
 
 export interface WaitlistCardProps {

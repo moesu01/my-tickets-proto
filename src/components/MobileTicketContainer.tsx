@@ -10,6 +10,7 @@ interface MobileTicketContainerProps {
   onWaitlist: (ticketId: string) => void;
   onDownloadQR: (ticketId: string) => void;
   onReceipt: (ticketId: string) => void;
+  onRemoveFromWaitlist: (ticketId: string) => void;
 }
 
 type ViewMode = 'stacked' | 'expanded';
@@ -20,6 +21,7 @@ const MobileTicketContainer: React.FC<MobileTicketContainerProps> = ({
   onWaitlist,
   onDownloadQR,
   onReceipt,
+  onRemoveFromWaitlist,
 }) => {
   const [viewMode, setViewMode] = useState<ViewMode>('stacked');
   const containerRef = useRef<HTMLDivElement>(null);
@@ -172,6 +174,7 @@ const MobileTicketContainer: React.FC<MobileTicketContainerProps> = ({
               onWaitlist={onWaitlist}
               onDownloadQR={onDownloadQR}
               onReceipt={onReceipt}
+              onRemoveFromWaitlist={onRemoveFromWaitlist}
             />
           </Box>
         ))}

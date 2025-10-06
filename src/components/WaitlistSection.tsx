@@ -4,6 +4,7 @@ import {
   Typography,
   Link,
   Collapse,
+  Tooltip,
 } from '@mui/material';
 import {
   KeyboardArrowUp as ExpandLessIcon,
@@ -400,37 +401,39 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({
                   }}>
                     Past waitlist entries
                   </Typography>
-                  <Box sx={{ 
-                    position: 'relative',
-                    borderRadius: '29px',
-                    width: '22px',
-                    height: '22px'
-                  }}>
+                  <Tooltip title="Waitlist history is kept for 1 year" arrow>
                     <Box sx={{ 
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      p: 0.5,
+                      position: 'relative',
+                      borderRadius: '29px',
                       width: '22px',
                       height: '22px'
                     }}>
-                      <Typography variant="body2" sx={{ 
-                        fontSize: '0.75rem',
-                        fontWeight: 'bold',
-                        color: '#4a5568',
-                        lineHeight: 1
+                      <Box sx={{ 
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        p: 0.5,
+                        width: '22px',
+                        height: '22px'
                       }}>
-                        {inactiveItems.length}
-                      </Typography>
+                        <Typography variant="body2" sx={{ 
+                          fontSize: '0.75rem',
+                          fontWeight: 'bold',
+                          color: '#4a5568',
+                          lineHeight: 1
+                        }}>
+                          {inactiveItems.length}
+                        </Typography>
+                      </Box>
+                      <Box sx={{
+                        position: 'absolute',
+                        inset: 0,
+                        border: '1px solid #a0aec0',
+                        borderRadius: '29px',
+                        pointerEvents: 'none'
+                      }} />
                     </Box>
-                    <Box sx={{
-                      position: 'absolute',
-                      inset: 0,
-                      border: '1px solid #a0aec0',
-                      borderRadius: '29px',
-                      pointerEvents: 'none'
-                    }} />
-                  </Box>
+                  </Tooltip>
                 </Box>
               </Box>
             </Box>

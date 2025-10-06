@@ -3,9 +3,15 @@ import {
   Typography,
   Box,
   Link,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
 } from '@mui/material';
 import {
   OpenInNew as ExternalLinkIcon,
+  List as ListIcon,
 } from '@mui/icons-material';
 import { TicketCardProps } from '../types';
 
@@ -222,6 +228,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
   onTransfer,
   onWaitlist,
   onReceipt,
+  onRemoveFromWaitlist,
 }) => {
   const [colors, setColors] = useState<ExtractedColors>({
     base: "rgb(66, 62, 0)",
@@ -230,6 +237,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
     subtle: "rgba(0, 0, 0, 0.15)",
     vsubtle: "rgba(0, 0, 0, 0.05)",
   });
+  const [removeModalOpen, setRemoveModalOpen] = useState(false);
 
   useEffect(() => {
     if (ticket.eventImage) {
@@ -261,6 +269,15 @@ const TicketCard: React.FC<TicketCardProps> = ({
 
   const handleReceipt = () => {
     onReceipt?.(ticket.ticketId);
+  };
+
+  const handleRemoveFromWaitlist = () => {
+    setRemoveModalOpen(true);
+  };
+
+  const handleConfirmRemove = () => {
+    onRemoveFromWaitlist?.(ticket.ticketId);
+    setRemoveModalOpen(false);
   };
 
   const formatDate = (dateString: string) => {
@@ -805,7 +822,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
             </Typography>
           </Box>
 
-          {/* Right section - QR Code */}
+          {/* Right section - QR Code or Waitlisted Text */}
           <Box
             sx={{
               flex: 1,
@@ -819,17 +836,47 @@ const TicketCard: React.FC<TicketCardProps> = ({
               height: '100%',
             }}
           >
-            <img 
-              src={`${process.env.PUBLIC_URL}/design/kyd_qr.svg`} 
-              alt="QR Code" 
-              style={{ 
-                maxWidth: '150px',
-                maxHeight: '150px',
-                width: 'auto',
-                height: 'auto',
-                filter: `hue-rotate(${getHueRotation(colors.primary)}deg) brightness(1.4) saturate(1.5)`
-              }}
-            />
+            {ticket.status === 'waitlisted' ? (
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                gap: 1
+              }}>
+                <ListIcon 
+                  sx={{ 
+                    fontSize: '24px', 
+                    color: colors.primary,
+                    opacity: 0.7
+                  }} 
+                />
+                <Typography
+                  sx={{
+                    fontSize: '12px',
+                    fontWeight: 500,
+                    color: colors.primary,
+                    fontFamily: "'Inter', sans-serif",
+                    textAlign: 'center',
+                    lineHeight: 1.3,
+                  }}
+                >
+                  This ticket is<br/>listed for sale
+                </Typography>
+              </Box>
+            ) : (
+              <img 
+                src={`${process.env.PUBLIC_URL}/design/kyd_qr.svg`} 
+                alt="QR Code" 
+                style={{ 
+                  maxWidth: '150px',
+                  maxHeight: '150px',
+                  width: 'auto',
+                  height: 'auto',
+                  filter: `hue-rotate(${getHueRotation(colors.primary)}deg) brightness(1.4) saturate(1.5)`
+                }}
+              />
+            )}
           </Box>
         </Box>
 
@@ -843,6 +890,8 @@ const TicketCard: React.FC<TicketCardProps> = ({
             handleTransfer();
           } else if (target.closest('.waitlist-button')) {
             handleWaitlist();
+          } else if (target.closest('.remove-waitlist-button')) {
+            handleRemoveFromWaitlist();
           }
         }}
         sx={{
@@ -888,98 +937,216 @@ const TicketCard: React.FC<TicketCardProps> = ({
           }
         }}
       >
-        {/* Transfer button */}
-        <Box
-          className="transfer-button"
-          sx={{
-            flex: 1,
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)',
-            cursor: 'pointer',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '10px 12px',
-            '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.9)',
-            },
-          }}
-        >
-          <Typography
+        {ticket.status === 'waitlisted' ? (
+          /* Remove from waitlist button - single button for waitlisted tickets */
+          <Box
+            className="remove-waitlist-button"
             sx={{
-              fontSize: '12px',
-              color: '#333333',
-              fontWeight: 500,
-              fontFamily: "'Inter', sans-serif",
-              lineHeight: 1.6,
+              flex: 1,
+              backgroundColor: 'white',
+              borderRadius: '8px',
+              boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)',
+              cursor: 'pointer',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '10px 12px',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              },
             }}
           >
-            Transfer ticket
-          </Typography>
-          <Box sx={{ width: 18, height: 18 }}>
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
-              fill="none"
+            <Typography
+              sx={{
+                fontSize: '12px',
+                color: '#e53e3e',
+                fontWeight: 500,
+                fontFamily: "'Inter', sans-serif",
+                lineHeight: 1.6,
+              }}
             >
-              <path
-                d={transferSvgPaths.p32940e00}
-                fill="black"
-                fillOpacity="0.39"
-              />
-            </svg>
+              Remove from waitlist
+            </Typography>
           </Box>
-        </Box>
+        ) : (
+          <>
+            {/* Transfer button */}
+            <Box
+              className="transfer-button"
+              sx={{
+                flex: 1,
+                backgroundColor: 'white',
+                borderRadius: '8px',
+                boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)',
+                cursor: 'pointer',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '10px 12px',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                },
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: '12px',
+                  color: '#333333',
+                  fontWeight: 500,
+                  fontFamily: "'Inter', sans-serif",
+                  lineHeight: 1.6,
+                }}
+              >
+                Transfer ticket
+              </Typography>
+              <Box sx={{ width: 18, height: 18 }}>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill="none"
+                >
+                  <path
+                    d={transferSvgPaths.p32940e00}
+                    fill="black"
+                    fillOpacity="0.39"
+                  />
+                </svg>
+              </Box>
+            </Box>
 
-        {/* Waitlist button */}
-        <Box
-          className="waitlist-button"
-          sx={{
-            flex: 1,
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)',
-            cursor: 'pointer',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '10px 12px',
-            '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.9)',
-            },
-          }}
-        >
+            {/* Waitlist button */}
+            <Box
+              className="waitlist-button"
+              sx={{
+                flex: 1,
+                backgroundColor: 'white',
+                borderRadius: '8px',
+                boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)',
+                cursor: 'pointer',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '10px 12px',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                },
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: '12px',
+                  color: '#333333',
+                  fontWeight: 500,
+                  fontFamily: "'Inter', sans-serif",
+                  lineHeight: 1.6,
+                }}
+              >
+                List my ticket
+              </Typography>
+              <Box sx={{ width: 18, height: 18 }}>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill="none"
+                >
+                  <path
+                    d={transferSvgPaths.p3d41b300}
+                    fill="black"
+                    fillOpacity="0.39"
+                  />
+                </svg>
+              </Box>
+            </Box>
+          </>
+        )}
+      </Box>
+
+      {/* Remove from waitlist modal */}
+      <Dialog
+        open={removeModalOpen}
+        onClose={() => setRemoveModalOpen(false)}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: '12px',
+            padding: '24px',
+          },
+        }}
+      >
+        <DialogTitle sx={{ pb: 2 }}>
           <Typography
+            variant="h6"
             sx={{
-              fontSize: '12px',
-              color: '#333333',
-              fontWeight: 500,
+              fontSize: '1.25rem',
+              fontWeight: 600,
+              color: '#2d3748',
               fontFamily: "'Inter', sans-serif",
-              lineHeight: 1.6,
             }}
           >
-            List my ticket
+            Remove from Waitlist
           </Typography>
-          <Box sx={{ width: 18, height: 18 }}>
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
-              fill="none"
-            >
-              <path
-                d={transferSvgPaths.p3d41b300}
-                fill="black"
-                fillOpacity="0.39"
-              />
-            </svg>
-          </Box>
-        </Box>
-      </Box>
+        </DialogTitle>
+        
+        <DialogContent sx={{ pb: 3 }}>
+          <Typography
+            variant="body1"
+            sx={{
+              fontSize: '1rem',
+              lineHeight: 1.5,
+              color: '#4a5568',
+              fontFamily: "'Inter', sans-serif",
+            }}
+          >
+            This ticket is on the waitlist and you will be refunded the price when it is sold. 
+            Are you sure you want to remove this from the waitlist?
+          </Typography>
+        </DialogContent>
+        
+        <DialogActions sx={{ gap: 2, pt: 2 }}>
+          <Button
+            onClick={() => setRemoveModalOpen(false)}
+            variant="outlined"
+            sx={{
+              borderRadius: '8px',
+              textTransform: 'none',
+              fontSize: '0.875rem',
+              fontWeight: 500,
+              fontFamily: "'Inter', sans-serif",
+              borderColor: '#e2e8f0',
+              color: '#4a5568',
+              '&:hover': {
+                borderColor: '#cbd5e0',
+                backgroundColor: '#f7fafc',
+              },
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirmRemove}
+            variant="contained"
+            sx={{
+              borderRadius: '8px',
+              textTransform: 'none',
+              fontSize: '0.875rem',
+              fontWeight: 500,
+              fontFamily: "'Inter', sans-serif",
+              backgroundColor: '#e53e3e',
+              '&:hover': {
+                backgroundColor: '#c53030',
+              },
+            }}
+          >
+            Remove
+          </Button>
+        </DialogActions>
+      </Dialog>
 
     </Box>
   );

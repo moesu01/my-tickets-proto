@@ -32,6 +32,10 @@ function App() {
     console.log('View receipt:', ticketId);
   };
 
+  const handleRemoveFromWaitlist = (ticketId: string) => {
+    console.log('Remove from waitlist:', ticketId);
+  };
+
   const handleViewTicket = (ticketId: string) => {
     console.log('View ticket:', ticketId);
   };
@@ -42,7 +46,7 @@ function App() {
     );
   };
 
-  const upcomingTickets = mockTickets.filter(ticket => ticket.status === 'upcoming');
+  const upcomingTickets = mockTickets.filter(ticket => ticket.status === 'upcoming' || ticket.status === 'waitlisted');
   const pastTickets = mockTickets.filter(ticket => ticket.status === 'past');
 
   // Handle scroll events for dynamic mask
@@ -130,6 +134,7 @@ function App() {
             onWaitlist={handleWaitlist}
             onDownloadQR={handleDownloadQR}
             onReceipt={handleReceipt}
+            onRemoveFromWaitlist={handleRemoveFromWaitlist}
           />
           
           {/* Desktop/Tablet Tickets Container */}
@@ -175,6 +180,7 @@ function App() {
                 onWaitlist={handleWaitlist}
                 onDownloadQR={handleDownloadQR}
                 onReceipt={handleReceipt}
+                onRemoveFromWaitlist={handleRemoveFromWaitlist}
               />
             ))}
           </Box>
