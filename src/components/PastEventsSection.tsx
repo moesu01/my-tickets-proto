@@ -210,7 +210,7 @@ const PastEventsSection: React.FC<PastEventsSectionProps> = ({
                       left: 0,
                       right: 0,
                       bottom: 0,
-                      backgroundImage: `url('/design/event_poster.png')`,
+                      backgroundImage: `url('${process.env.PUBLIC_URL}/design/event_poster.png')`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                       filter: 'blur(30px)',

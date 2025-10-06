@@ -820,7 +820,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
             }}
           >
             <img 
-              src={ticket.qrCode} 
+              src={`${process.env.PUBLIC_URL}/design/kyd_qr.svg`} 
               alt="QR Code" 
               style={{ 
                 maxWidth: '150px',
