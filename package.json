@@ -2,7 +2,7 @@
   "name": "my-tickets-react",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://moe-kyd.github.io/my-tickets-react",
+  "homepage": "https://moe-kyd.github.io/my-tickets-proto",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
