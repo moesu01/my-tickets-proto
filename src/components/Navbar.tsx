@@ -27,7 +27,7 @@ const Navbar: React.FC = () => {
           {/* Logo Section */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <img 
-              src="/kyd_logo_nav.svg" 
+              src="%PUBLIC_URL%/kyd_logo_nav.svg" 
               alt="kyd labs" 
               style={{ 
                 height: '34px',

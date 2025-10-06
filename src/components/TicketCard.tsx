@@ -431,8 +431,8 @@ const TicketCard: React.FC<TicketCardProps> = ({
     <Box
       className="ticket-card"
       sx={{
-        width: '100%',
-        maxWidth: '350px',
+        width: '350px',
+        flexShrink: 0,
         borderRadius: '16px',
         overflow: 'visible',
         display: 'flex',
