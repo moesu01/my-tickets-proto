@@ -1,4 +1,4 @@
-import { Ticket, WaitlistItem, Profile } from '../../types';
+import { Ticket, WaitlistItem, Profile, Event } from '../../types';
 
 // Mock data for development and testing
 export const mockTickets: Ticket[] = [
@@ -204,3 +204,51 @@ export const mockProfile: Profile = {
   email: "firstname.last@gmail.com",
   phone: "+1 (917) 012 3456"
 };
+
+export const mockRecommendedEvents: Event[] = [
+  {
+    id: "rec-1",
+    title: "New Amsterdam Presents: Teddy Abrams and Special Guests",
+    date: "Thu Jul 31",
+    time: "7:00PM",
+    venue: "Le Poisson Rouge",
+    image: `${process.env.PUBLIC_URL}/design/event_poster.png`,
+    onGetTickets: () => console.log('Get tickets for Teddy Abrams event'),
+  },
+  {
+    id: "rec-2",
+    title: "Herbert Holler's Freedom Party NYC Annual Michael Jackson Tribute",
+    date: "Fri Aug 1",
+    time: "6:00PM",
+    venue: "Le Poisson Rouge",
+    image: `${process.env.PUBLIC_URL}/design/mach-hommy.png`,
+    onGetTickets: () => console.log('Get tickets for Michael Jackson Tribute'),
+  },
+  {
+    id: "rec-3",
+    title: "THE DOLLYROTS Get On This Ride Tour w/ Black Widows + Soraia",
+    date: "Thu Aug 7",
+    time: "7:00PM",
+    venue: "Le Poisson Rouge",
+    image: `${process.env.PUBLIC_URL}/design/gimme.png`,
+    onGetTickets: () => console.log('Get tickets for THE DOLLYROTS'),
+  },
+  {
+    id: "rec-4",
+    title: "Electronic Dreams Festival",
+    date: "Sat Dec 15",
+    time: "8:00PM",
+    venue: "Brooklyn Steel",
+    image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop",
+    onGetTickets: () => console.log('Get tickets for Electronic Dreams Festival'),
+  },
+  {
+    id: "rec-5",
+    title: "Matinee Social Club, 90s vs 00s",
+    date: "Sat Aug 23",
+    time: "5:00PM",
+    venue: "Le Poisson Rouge",
+    image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop",
+    onGetTickets: () => console.log('Get tickets for Matinee Social Club'),
+  },
+];

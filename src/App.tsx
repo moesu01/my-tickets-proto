@@ -1,20 +1,19 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Container, Typography, Box } from '@mui/material';
 import { theme } from './theme';
 import Navbar from './components/Navbar';
-import TicketCard from './components/TicketCard';
+import TicketContainer from './components/TicketContainer';
 import MobileTicketContainer from './components/MobileTicketContainer';
 import WaitlistSection from './components/WaitlistSection';
 import PastEventsSection from './components/PastEventsSection';
 import ProfileSection from './components/ProfileSection';
-import { mockTickets, mockWaitlistItems, mockProfile } from './assets/mock-data';
+import RecommendedEventsContainer from './components/RecommendedEventsContainer';
+import { mockTickets, mockWaitlistItems, mockProfile, mockRecommendedEvents } from './assets/mock-data';
 
 function App() {
   const [pastEventsExpanded, setPastEventsExpanded] = useState(true);
   const [waitlistItems, setWaitlistItems] = useState(mockWaitlistItems);
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const ticketsContainerRef = useRef<HTMLDivElement>(null);
 
   const handleTransfer = (ticketId: string) => {
     console.log('Transfer ticket:', ticketId);
@@ -48,26 +47,6 @@ function App() {
 
   const upcomingTickets = mockTickets.filter(ticket => ticket.status === 'upcoming' || ticket.status === 'waitlisted');
   const pastTickets = mockTickets.filter(ticket => ticket.status === 'past');
-
-  // Handle scroll events for dynamic mask
-  useEffect(() => {
-    const container = ticketsContainerRef.current;
-    if (!container) return;
-
-    const handleScroll = () => {
-      const scrollLeft = container.scrollLeft;
-      setScrollPosition(scrollLeft);
-    };
-
-    container.addEventListener('scroll', handleScroll);
-    
-    // Initial check
-    handleScroll();
-
-    return () => {
-      container.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -127,8 +106,18 @@ function App() {
             </Box>
           </Box>
           
-          {/* Mobile Tickets Container */}
-          <MobileTicketContainer
+          {/* Mobile Tickets Container - DISABLED */}
+          {/* <MobileTicketContainer
+            tickets={upcomingTickets}
+            onTransfer={handleTransfer}
+            onWaitlist={handleWaitlist}
+            onDownloadQR={handleDownloadQR}
+            onReceipt={handleReceipt}
+            onRemoveFromWaitlist={handleRemoveFromWaitlist}
+          /> */}
+          
+          {/* Desktop/Tablet/Mobile Tickets Container */}
+          <TicketContainer
             tickets={upcomingTickets}
             onTransfer={handleTransfer}
             onWaitlist={handleWaitlist}
@@ -136,55 +125,10 @@ function App() {
             onReceipt={handleReceipt}
             onRemoveFromWaitlist={handleRemoveFromWaitlist}
           />
-          
-          {/* Desktop/Tablet Tickets Container */}
-          <Box 
-            ref={ticketsContainerRef}
-            id="upcoming-events-tickets-container"
-            className="upcoming-events-tickets-container"
-            sx={{ 
-              display: { xs: 'none', md: 'flex' }, // Hide on mobile, show on tablet and desktop
-              gap: 2, // 24px spacing between cards
-              pb: 2,
-              pl: 1, // Add left padding for shadow space
-              pr: 6,
-              overflowX: 'auto', // Enable horizontal scrolling
-              overflowY: 'visible', // Prevent vertical scrolling
-              // Hide scrollbars
-              scrollbarWidth: 'none', // Firefox
-              '&::-webkit-scrollbar': {
-                display: 'none', // Chrome, Safari, Edge
-              },
-              // Dynamic CSS mask based on scroll position
-              maskImage: scrollPosition > 0 
-                ? 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
-                : 'linear-gradient(to right, black 0%, black 90%, transparent 100%)',
-              WebkitMaskImage: scrollPosition > 0 
-                ? 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
-                : 'linear-gradient(to right, black 0%, black 90%, transparent 100%)',
-              maskSize: '100% 100%', // Make mask 150% of container width to prevent premature cutting
-              WebkitMaskSize: '100% 100%',
-              maskPosition: 'center', // Center the mask on the container
-              WebkitMaskPosition: 'center',
-              maskRepeat: 'no-repeat',
-              WebkitMaskRepeat: 'no-repeat',
-              // Smooth transition between mask states
-              transition: 'mask-image 0.2s ease-out, -webkit-mask-image 0.2s ease-out',
-            }}
-          >
-            {upcomingTickets.map((ticket) => (
-              <TicketCard
-                key={ticket.id}
-                ticket={ticket}
-                onTransfer={handleTransfer}
-                onWaitlist={handleWaitlist}
-                onDownloadQR={handleDownloadQR}
-                onReceipt={handleReceipt}
-                onRemoveFromWaitlist={handleRemoveFromWaitlist}
-              />
-            ))}
-          </Box>
         </Box>
+
+        {/* Recommended Events Section */}
+        <RecommendedEventsContainer events={mockRecommendedEvents} />
 
         {/* Past Events Section */}
         <PastEventsSection 

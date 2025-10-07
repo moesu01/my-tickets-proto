@@ -72,3 +72,21 @@ export interface ProfileFieldProps {
   onChange: (value: string) => void;
   validation?: (value: string) => string | null;
 }
+
+export interface Event {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  venue: string;
+  image: string;
+  onGetTickets: () => void;
+}
+
+export interface EventCardProps {
+  event: Event;
+}
+
+export interface RecommendedEventsContainerProps {
+  events: Event[];
+}
