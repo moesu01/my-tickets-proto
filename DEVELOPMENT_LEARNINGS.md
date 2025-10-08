@@ -107,8 +107,28 @@ const scrollToNext = () => {
 - [ ] Blur/scale effects work correctly
 - [ ] No visual glitches during navigation
 
+## Critical Learning: Keep Scroll Snap Fixes Simple
+
+### The Over-Engineering Problem
+**Issue**: We keep over-engineering fixes to scroll snapping when the solutions are much simpler than expected.
+
+### Recent Example: Mobile Padding Issue
+**Problem**: After removing main container padding (`px: { xs: 0, md: 2 }`), first ticket wasn't visible on mobile
+**Over-engineered approach**: Complex scroll padding calculations, active ticket detection fixes, etc.
+**Simple solution**: Just add `xs: 4` to the tickets container left padding (`pl: { xs: 4, md: 1.65 }`)
+
+### Key Insight
+**The scroll snap system just needs enough left padding to center the first ticket properly.** No complex calculations or matching padding values required.
+
+### Best Practice Going Forward
+1. **Try the simplest fix first** - Usually just adjusting padding
+2. **Don't overthink scroll padding calculations** - The browser handles most of it
+3. **Test visually first** - If it looks right, it probably is right
+4. **Avoid complex JavaScript calculations** unless absolutely necessary
+
 ## Future Considerations
 
 - Consider using Intersection Observer API for more reliable active ticket detection
 - Monitor browser compatibility for scroll snap features
 - Test on various screen sizes and devices
+- **Remember: Scroll snap fixes are usually simpler than they seem**

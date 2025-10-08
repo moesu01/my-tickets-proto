@@ -3,11 +3,10 @@ import { Box, IconButton, Typography, Container, Button } from '@mui/material';
 import { Person, ShoppingCart } from '@mui/icons-material';
 
 interface NavbarProps {
-  onThemeToggle: () => void;
   isDarkMode: boolean;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDarkMode }) => {
+const Navbar: React.FC<NavbarProps> = ({ isDarkMode }) => {
   return (
     <Box
       sx={{
@@ -80,7 +79,6 @@ const Navbar: React.FC<NavbarProps> = ({ onThemeToggle, isDarkMode }) => {
             
             <Button
               variant="text"
-              onClick={onThemeToggle}
               sx={{
                 color: 'text.secondary',
                 borderRadius: '8px',

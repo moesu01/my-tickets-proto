@@ -9,7 +9,7 @@ export const mockTickets: Ticket[] = [
     venue: "The Brooklyn Monarch",
     location: "Brooklyn, NY",
     ticketType: "VIP-Table Seating (up to 6 guests)",
-    date: "2025-10-09",
+    date: "2025-10-10",
     time: "6:00 → 10:00PM",
     admitCount: 6,
     ticketId: "012390zzv9a0d9f80",
@@ -25,7 +25,7 @@ export const mockTickets: Ticket[] = [
     venue: "Le Poisson Rouge",
     location: "New York, NY",
     ticketType: "GA Tier 1",
-    date: "2025-10-10",
+    date: "2025-10-11",
     time: "11:00 → 3:00AM",
     admitCount: 4,
     ticketId: "012390zzv9a0d9f81",
@@ -41,7 +41,7 @@ export const mockTickets: Ticket[] = [
     venue: "Le Poisson Rouge",
     location: "New York, NY",
     ticketType: "GA Tier 2",
-    date: "2025-10-10",
+    date: "2025-10-11",
     time: "11:00 → 3:00AM",
     admitCount: 1,
     ticketId: "012390zzv9a0d9f88",
@@ -57,7 +57,7 @@ export const mockTickets: Ticket[] = [
     venue: "Le Poisson Rouge",
     location: "New York, NY",
     ticketType: "GA Tier 1",
-    date: "2026-02-06",
+    date: "2026-02-07",
     time: "6:00PM",
     admitCount: 2,
     ticketId: "012390zzv9a0d9f82",
@@ -105,7 +105,7 @@ export const mockTickets: Ticket[] = [
     venue: "Le Poisson Rouge",
     location: "New York, NY",
     ticketType: "GA Tier 1",
-    date: "2025-09-14",
+    date: "2025-09-15",
     time: "11:00PM",
     admitCount: 2,
     ticketId: "012390zzv9a0d9f85",
@@ -252,3 +252,35 @@ export const mockRecommendedEvents: Event[] = [
     onGetTickets: () => console.log('Get tickets for Matinee Social Club'),
   },
 ];
+
+// Minimal dataset for testing single ticket scenario
+export const minimalMockTickets: Ticket[] = [
+  {
+    id: 1,
+    eventName: "Pursuit Of Happiness W/ Vosters & Dj Chazz Rockwell",
+    eventSeries: "Matinee Social Club",
+    venue: "The Brooklyn Monarch",
+    location: "Brooklyn, NY",
+    ticketType: "VIP-Table Seating (up to 6 guests)",
+    date: "2025-10-10",
+    time: "6:00 → 10:00PM",
+    admitCount: 6,
+    ticketId: "012390zzv9a0d9f80",
+    qrCode: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI2ZmZiIvPjx0ZXh0IHg9IjYwIiB5PSI2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSIjMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5RUiBDb2RlPC90ZXh0Pjwvc3ZnPg==",
+    eventImage: `${process.env.PUBLIC_URL}/design/event_poster.png`,
+    theme: "green",
+    status: "upcoming"
+  }
+];
+
+export const minimalMockWaitlistItems: WaitlistItem[] = [];
+
+// Function to get the appropriate dataset based on mode
+export const getMockData = (useMinimalData: boolean) => {
+  return {
+    tickets: useMinimalData ? minimalMockTickets : mockTickets,
+    waitlistItems: useMinimalData ? minimalMockWaitlistItems : mockWaitlistItems,
+    profile: mockProfile,
+    recommendedEvents: mockRecommendedEvents
+  };
+};
