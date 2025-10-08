@@ -1,11 +1,15 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Box, IconButton } from '@mui/material';
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { Box, IconButton, Typography, Link } from '@mui/material';
+import { ChevronLeft, ChevronRight, CurrencyExchangeOutlined, TimerOutlined } from '@mui/icons-material';
 import TicketCard from './TicketCard';
-import { Ticket } from '../types';
+import { Ticket, WaitlistItem } from '../types';
+import { COLORS, COLORS_DARK } from '../theme';
 
 interface TicketContainerProps {
   tickets: Ticket[];
+  waitlistItems?: WaitlistItem[];
+  title?: string;
+  isDarkMode?: boolean;
   onTransfer: (ticketId: string) => void;
   onWaitlist: (ticketId: string) => void;
   onDownloadQR: (ticketId: string) => void;
@@ -15,6 +19,9 @@ interface TicketContainerProps {
 
 const TicketContainer: React.FC<TicketContainerProps> = ({
   tickets,
+  waitlistItems = [],
+  title = "Upcoming Events",
+  isDarkMode = false,
   onTransfer,
   onWaitlist,
   onDownloadQR,
@@ -24,7 +31,79 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
   const [scrollPosition, setScrollPosition] = useState(0);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
+  const [activeTicketIndex, setActiveTicketIndex] = useState(0);
   const ticketsContainerRef = useRef<HTMLDivElement>(null);
+
+  // Use appropriate color constants based on theme mode
+  const colors = isDarkMode ? COLORS_DARK : COLORS;
+
+  // Calculate upcoming events within 2 weeks
+  const getUpcomingEventsCount = () => {
+    const today = new Date();
+    const twoWeeksFromNow = new Date(today.getTime() + (14 * 24 * 60 * 60 * 1000));
+    
+    return tickets.filter(ticket => {
+      const eventDate = new Date(ticket.date);
+      return eventDate >= today && eventDate <= twoWeeksFromNow && 
+             (ticket.status === 'upcoming' || ticket.status === 'waitlisted');
+    }).length;
+  };
+
+  const upcomingEventsCount = getUpcomingEventsCount();
+
+  // Calculate waitlist statistics
+  const getWaitlistStats = () => {
+    const activeWaitlistItems = waitlistItems.filter(item => item.status === 'ongoing');
+    
+    // Find tickets that are on waitlist (status: 'waitlisted')
+    const ticketsOnWaitlist = tickets.filter(ticket => ticket.status === 'waitlisted');
+    
+    // Find the first ticket on waitlist
+    const firstWaitlistedTicket = ticketsOnWaitlist[0];
+    
+    // Find waitlist entry expiring soon (within 7 days)
+    const expiringSoon = activeWaitlistItems.find(item => {
+      const expirationDate = new Date(item.expirationDate);
+      const today = new Date();
+      const sevenDaysFromNow = new Date(today.getTime() + (7 * 24 * 60 * 60 * 1000));
+      return expirationDate <= sevenDaysFromNow;
+    });
+    
+    // Count other events on waitlist (excluding the first one)
+    const otherWaitlistEvents = activeWaitlistItems.length - 1;
+    
+    return {
+      firstWaitlistedTicket,
+      expiringSoon,
+      otherWaitlistEvents,
+      totalActiveWaitlist: activeWaitlistItems.length,
+      ticketsOnWaitlistCount: ticketsOnWaitlist.length
+    };
+  };
+
+  const waitlistStats = getWaitlistStats();
+
+  // Function to scroll to recommended events section
+  const scrollToRecommendedEvents = () => {
+    const recommendedSection = document.getElementById('recommended-events-container');
+    if (recommendedSection) {
+      recommendedSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
+  // Function to scroll to waitlist section
+  const scrollToWaitlistSection = () => {
+    const waitlistSection = document.getElementById('waitlist-section');
+    if (waitlistSection) {
+      waitlistSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
 
   // Handle scroll events for dynamic mask and button states
   useEffect(() => {
@@ -38,6 +117,23 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
       // Small grace so buttons flip cleanly (from Builder.io article)
       setCanScrollLeft(scrollLeft > 5);
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 5);
+      
+      // Calculate which ticket is currently active based on scroll position
+      // Use requestAnimationFrame to ensure calculation happens after scroll snap
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const children = Array.from(container.children) as HTMLElement[];
+          if (children.length > 0) {
+            const cardWidth = children[0].offsetWidth || 1;
+            const gap = 16; // Approximate gap between cards
+            // Account for scroll padding (0px since parent padding removed)
+            const scrollPadding = 0;
+            const adjustedScrollLeft = container.scrollLeft + scrollPadding;
+            const currentIndex = Math.round(adjustedScrollLeft / (cardWidth + gap));
+            setActiveTicketIndex(Math.min(children.length - 1, Math.max(0, currentIndex)));
+          }
+        });
+      });
     };
 
     container.addEventListener('scroll', handleScroll);
@@ -57,15 +153,19 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
     const children = Array.from(container.children) as HTMLElement[];
     if (!children.length) return;
 
-    const cardWidth = children[0].offsetWidth || 1;
-    const currentIndex = Math.round(container.scrollLeft / cardWidth);
-
+    // Simple approach: just scroll to the next ticket
+    const currentIndex = activeTicketIndex;
     const targetIndex = Math.min(children.length - 1, currentIndex + 1);
+    
+    // If we're already at the last ticket, don't scroll
+    if (currentIndex >= children.length - 1) {
+      return;
+    }
     
     children[targetIndex].scrollIntoView({
       behavior: 'smooth',
       block: 'nearest',
-      inline: 'start',
+      inline: 'center',
     });
   };
 
@@ -76,71 +176,347 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
     const children = Array.from(container.children) as HTMLElement[];
     if (!children.length) return;
 
-    const cardWidth = children[0].offsetWidth || 1;
-    const currentIndex = Math.round(container.scrollLeft / cardWidth);
-
+    // Simple approach: just scroll to the previous ticket
+    const currentIndex = activeTicketIndex;
     const targetIndex = Math.max(0, currentIndex - 1);
+    
+    // If we're already at the first ticket, don't scroll
+    if (currentIndex <= 0) {
+      return;
+    }
     
     children[targetIndex].scrollIntoView({
       behavior: 'smooth',
       block: 'nearest',
-      inline: 'start',
+      inline: 'center',
     });
   };
 
   return (
-    <Box sx={{ position: 'relative' }}>
-      {/* Arrow Navigation Buttons */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: -60, // Position above the container
-          right: 0,
-          display: 'flex', // Show on all screen sizes
-          gap: 1,
-          zIndex: 1,
+    <Box 
+      sx={{ 
+        mb: 4,
+        borderRadius: '16px',
+        py: 1,
+        px:2,
+        backgroundColor: 'background.paper',
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 2,
+        position: 'relative',
+      }}
+    >
+      {/* Header */}
+      <Box 
+        id="upcoming-events-header"
+        className="upcoming-events-header"
+        sx={{ 
+          display: 'flex', 
+          gap: 2,
+          flexDirection: 'column',
+          alignItems: 'flex-start', 
+          justifyContent: 'space-between',
+          mb: 0,
+          py: 2,
+          minWidth: '280px'
         }}
       >
-        <IconButton
-          onClick={scrollToPrevious}
-          disabled={!canScrollLeft}
-          size="small"
-          sx={{
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-            border: '1px solid #e2e8f0',
-            '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 1)',
-            },
-            '&:disabled': {
-              backgroundColor: 'rgba(255, 255, 255, 0.5)',
-              color: '#a0aec0',
-            },
-            width: 32,
-            height: 32,
+        {/* KYD Summary Header */}
+        <Typography 
+          variant="h6" 
+          component="h1" 
+          sx={{ 
+            fontWeight: 700,
+            fontSize: '14px',
+            color: colors.primaryText,
+            textTransform: 'uppercase',
+            letterSpacing: '1%',
+            borderTop: `1px solid ${colors.borderLight}`,
+            width: '100%',
+            pt: .5,
+            mb: 0
           }}
         >
-          <ChevronLeft fontSize="small" />
-        </IconButton>
-        <IconButton
-          onClick={scrollToNext}
-          disabled={!canScrollRight}
-          size="small"
+          Your Tickets
+        </Typography>
+        
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+            <Typography 
+              variant="h5" 
+              component="h2" 
+              sx={{ 
+                fontWeight: 700,
+                fontSize: '28px',
+                color: colors.primaryText,
+                letterSpacing: '-3%',
+                lineHeight: '1.2',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                textTransform: 'capitalize'
+              }}
+            >
+              You have 
+              <Box sx={{ 
+                backgroundColor: '#E84B38', 
+                color: 'white', 
+                borderRadius: '50%', 
+                width: 32, 
+                height: 32, 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                fontSize: '22px',
+                fontWeight: 500,
+                lineHeight: 2,
+              }}>
+                {upcomingEventsCount}
+              </Box>
+            </Typography>
+            <Typography 
+              variant="h5" 
+              component="h2" 
+              sx={{ 
+                fontWeight: 700,
+                fontSize: '28px',
+                color: colors.primaryText,
+                letterSpacing: '-3%',
+                lineHeight: '1.2',
+                textTransform: 'capitalize'
+              }}
+            >
+              upcoming events
+            </Typography>
+            <Typography 
+              variant="body2" 
+              component="p" 
+              sx={{ 
+                fontWeight: 400,
+                fontSize: '16px',
+                color: colors.primaryText,
+                letterSpacing: '-0.5px',
+                lineHeight: '20px',
+                mt: 0.5,
+              }}
+            >
+              You have {tickets.length} tickets total
+            </Typography>
+          </Box>
+          {/* <Box sx={{ 
+            backgroundColor: colors.primaryText, 
+            color: 'white', 
+            borderRadius: '50%', 
+            width: 26, 
+            height: 26, 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            fontSize: '16px',
+            fontWeight: 500,
+            ml: 0.5
+          }}>
+            {tickets.length}
+          </Box> */}
+        </Box>
+        
+        
+        {/* Arrow Navigation Buttons */}
+        <Box
+          className="ticket-container-arrow-navigation"
           sx={{
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-            border: '1px solid #e2e8f0',
-            '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 1)',
-            },
-            '&:disabled': {
-              backgroundColor: 'rgba(255, 255, 255, 0.5)',
-              color: '#a0aec0',
-            },
-            width: 32,
-            height: 32,
+
+            display: 'flex',
+            gap: 1,
+            zIndex: 1,
           }}
         >
-          <ChevronRight fontSize="small" />
-        </IconButton>
+          <IconButton
+            onClick={scrollToPrevious}
+            disabled={!canScrollLeft}
+            size="small"
+            sx={{
+              backgroundColor: 'background.paper',
+              color: 'theme.palette.text.primary',
+              border: '1px solid #ccc',
+              '&:hover': {
+                backgroundColor: 'background.default',
+              },
+              '&:disabled': {
+                backgroundColor: 'transparent',
+                color: 'theme.palette.text.secondary',
+              },
+              width: 32,
+              height: 32,
+            }}
+          >
+            <ChevronLeft fontSize="small" />
+          </IconButton>
+          <IconButton
+            onClick={scrollToNext}
+            disabled={!canScrollRight}
+            size="small"
+            sx={{
+              backgroundColor: 'background.paper',
+              color: 'theme.palette.text.primary',
+              border: '1px solid #ccc',
+              '&:hover': {
+                backgroundColor: 'background.default',
+              },
+              '&:disabled': {
+                backgroundColor: 'transparent',
+                color: 'theme.palette.text.secondary',
+              },
+              width: 32,
+              height: 32,
+            }}
+          >
+            <ChevronRight fontSize="small" />
+          </IconButton>
+        </Box>
+        
+        {/* Summary Stats List */}
+        <Box
+          component="ul"
+          sx={{
+            listStyle: 'none',
+            padding: 0,
+            margin: 0,
+            mt: 2,
+            width: '100%'
+          }}
+        >
+          {/* First item - Mock: Listing a ticket for sale */}
+          <Box
+            component="li"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1.5,
+              fontSize: '14px',
+              color: colors.primaryText,
+              fontWeight: 500,
+              borderTop: `1px solid ${colors.borderLight}`,
+              pt: 1.5,
+              pr: 1.5,
+              pb: 1.5,
+              mb: 0
+            }}
+          >
+            <CurrencyExchangeOutlined 
+              sx={{ 
+                fontSize: '20px', 
+                color: colors.iconColor 
+              }} 
+            />
+            <Box>
+              <Typography 
+                sx={{ 
+                  fontSize: '0.85rem', 
+                  fontWeight: 700,
+                  lineHeight: 1.2,
+                  mb: 0.25
+                }}
+              >
+                Listing on waitlist
+              </Typography>
+              <Typography 
+                sx={{ 
+                  fontSize: '0.875rem', 
+                  fontWeight: 500,
+                  lineHeight: 1.2
+                }}
+              >
+                Mach-Hommy • Oct 20 '25
+              </Typography>
+            </Box>
+          </Box>
+          
+          {/* Second item - Mock: Waiting to buy a ticket */}
+          <Box
+            component="li"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1.5,
+              fontSize: '14px',
+              color: colors.primaryText,
+              fontWeight: 500,
+              borderTop: `1px solid ${colors.borderLight}`,
+              pt: 1.5,
+              pr: 1.5,
+              pb: 1.5,
+              mb: 0
+            }}
+          >
+            <TimerOutlined 
+              sx={{ 
+                fontSize: '20px', 
+                color: colors.iconColor 
+              }} 
+            />
+            <Box>
+              <Typography 
+                sx={{ 
+                  fontSize: '0.85rem', 
+                  fontWeight: 700,
+                  lineHeight: 1.2,
+                  mb: 0.25
+                }}
+              >
+                Waiting for ticket
+              </Typography>
+              <Typography 
+                sx={{ 
+                  fontSize: '0.875rem', 
+                  fontWeight: 500,
+                  lineHeight: 1.2
+                }}
+              >
+                Gimme Gimme • Nov 15 '25
+              </Typography>
+            </Box>
+          </Box>
+          
+          {/* Third item - Button to view waitlist */}
+          <Box
+            component="li"
+            sx={{
+              fontSize: '14px',
+              color: colors.primaryText,
+              fontWeight: 500,
+              pb: 0.5,
+              mb: 0,
+              padding: 0,
+              border: 'none',
+              background: 'none',
+              cursor: 'pointer',
+              '&:hover': {
+                opacity: 0.8
+              }
+            }}
+          >
+            <Link
+              component="button"
+              onClick={scrollToWaitlistSection}
+              sx={{
+                fontSize: '14px',
+                color: colors.primaryText,
+                fontWeight: 500,
+                textDecoration: 'underline',
+                cursor: 'pointer',
+                border: 'none',
+                background: 'none',
+                padding: 0,
+                '&:hover': {
+                  textDecoration: 'underline',
+                }
+              }}
+            >
+              view waitlist
+            </Link>
+          </Box>
+        </Box>
       </Box>
 
       {/* Tickets Container */}
@@ -150,10 +526,11 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
         className="upcoming-events-tickets-container"
         sx={{ 
           display: 'flex', // Show on all screen sizes
+          alignItems: 'center', 
           gap: { xs: 2, md: 4 }, // Smaller gap on mobile (16px), larger on desktop (24px)
-          pb: 2,
+          py: 2,
           pl: { xs: 1, md: 1.65 }, // Less padding on mobile
-          pr: { xs: 1, md: 6 }, // Less padding on mobile
+          pr: { xs: 1, md: 24 }, // Extra right padding to allow last card to center
           // Extend container width so CSS mask fades outside visible area
           width: '100%',
           // marginLeft: '-%', // Center the extended container
@@ -161,7 +538,8 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
           overflowY: 'visible', // Prevent vertical scrolling
           // CSS Scroll Snapping
           scrollSnapType: 'x mandatory',
-          scrollPaddingLeft: { xs: '16px', md: '24px' }, // Adjust scroll padding for mobile
+          scrollPaddingLeft: { xs: '16px', md: '24px' }, // Needed for proper centering
+          scrollPaddingRight: { xs: '16px', md: '24px' }, // Needed for proper centering
           // Hide scrollbars
           scrollbarWidth: 'none', // Firefox
           '&::-webkit-scrollbar': {
@@ -169,10 +547,10 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
           },
           // Dynamic CSS mask based on scroll position
           maskImage: scrollPosition > 0 
-            ? 'linear-gradient(to right, transparent 0%, black 5%, black 90%, transparent 100%)'
+            ? 'linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%)'
             : 'linear-gradient(to right, black 0%, black 90%, transparent 100%)',
           WebkitMaskImage: scrollPosition > 0 
-            ? 'linear-gradient(to right, transparent 0%, black 5%, black 90%, transparent 100%)'
+            ? 'linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%)'
             : 'linear-gradient(to right, black 0%, black 90%, transparent 100%)',
           maskSize: '100% 100%', // Make mask 150% of container width to prevent premature cutting
           WebkitMaskSize: '100% 100%',
@@ -184,12 +562,21 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
           transition: 'mask-image 0.2s ease-out, -webkit-mask-image 0.2s ease-out',
         }}
       >
-        {tickets.map((ticket) => (
+        {tickets.map((ticket, index) => (
           <Box
             key={ticket.id}
             sx={{
-              scrollSnapAlign: 'start',
+              scrollSnapAlign: 'center',
               flexShrink: 0,
+              transform: index === activeTicketIndex ? 'scale(1)' : 'scale(0.9)',
+              filter: index === activeTicketIndex ? 'blur(0px)' : 'blur(2px) grayscale(1)',
+              opacity: index === activeTicketIndex ? 1 : 0.65,
+              transition: 'transform 0.3s ease-out, filter 0.3s ease-out, opacity 0.3s ease-out',
+              '&:hover': {
+                transform: index === activeTicketIndex ? 'scale(1)' : 'scale(0.85)',
+                filter: index === activeTicketIndex ? 'blur(0px)' : 'blur(0px) grayscale(0)',
+                opacity: 1,
+              },
             }}
           >
             <TicketCard
@@ -202,7 +589,18 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
             />
           </Box>
         ))}
+        
+        {/* Extra spacer to allow last ticket to scroll into view */}
+        <Box
+          sx={{
+            flexShrink: 0,
+            width: { xs: '50vw', md: '50vw' }, // Extra space for last ticket to center
+          }}
+        />
       </Box>
+
+
+      
     </Box>
   );
 };

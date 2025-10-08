@@ -1,0 +1,29 @@
+# Cursor Rules for My Tickets React App
+
+## Development Guidelines
+
+### When Stuck on a Problem
+- **Always check `DEVELOPMENT_LEARNINGS.md`** - This file contains solutions to common problems and implementation patterns
+- Look for similar issues or patterns that have been solved before
+- Add new learnings to the file when discovering solutions
+
+### Code Style
+- Use TypeScript for all components
+- Follow React best practices with hooks
+- Use Material-UI (MUI) components consistently
+- Prefer functional components over class components
+
+### File Organization
+- Keep components in `/src/components/`
+- Use descriptive component names
+- Group related functionality together
+
+### Documentation
+- Update `DEVELOPMENT_LEARNINGS.md` when solving complex problems
+- Add comments for non-obvious implementation decisions
+- Document any workarounds or browser-specific solutions
+
+### Testing
+- Test scroll snap functionality on different screen sizes
+- Verify arrow navigation works for all tickets
+- Check for visual glitches during transitions

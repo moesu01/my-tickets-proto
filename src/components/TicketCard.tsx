@@ -436,7 +436,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
 
   // Generate dynamic shadow styles
   const dropShadowStyle = {
-    boxShadow: `0px 4px 10px rgba(0, 0, 0, 0.15)`,
+    boxShadow: `0px 4px 16px -4px ${colors.secondary.replace('.6)', '0.25)')}`,
   };
 
   const innerShadowStyle = {
@@ -458,12 +458,11 @@ const TicketCard: React.FC<TicketCardProps> = ({
         // Individual section shadows instead of mask
       }}
     >
-      {/* Top ticket section */}
+      {/* Combined top and middle section */}
       <Box
-        className="top-ticket-section"
+        className="combined-ticket-section"
         sx={{
-          height: 184,
-          borderRadius: '4px 4px 16px 16px',
+          borderRadius: '4px 4px 16px 16px', // Using top section's border radius
           backgroundColor: '#ffffff',
           ...innerShadowStyle,
           ...dropShadowStyle,
@@ -474,26 +473,26 @@ const TicketCard: React.FC<TicketCardProps> = ({
             '&::before': {
               content: '""',
               position: 'absolute',
-              top: 68,
-              left: 0.5,
-              right: 0.5,
+              top: 0,
+              left: 0,
+              right: 0,
               bottom: 0,
               backgroundImage: `url('${ticket.eventImage}')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
-              filter: 'blur(17.15px)',
-              opacity: 0.15,
+              filter: 'blur(25px)',
+              opacity: 0.12,
               borderRadius: '10px',
               zIndex: 0,
             }
           }),
           // Border
           border: `1px solid ${colors.subtle}`,
+          borderBottom: `1.5px dotted ${colors.subtle.replace('.15)', '0.2)')}`,
           // Content layout
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between',
           padding: '12px',
           '& > *': {
             position: 'relative',
@@ -503,14 +502,16 @@ const TicketCard: React.FC<TicketCardProps> = ({
       >
         {/* Title section */}
         <Box
+          className="title-section"
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             mb: 1.5,
+            gap:1,
           }}
         >
-          <Box sx={{ flex: 1 }}>
+          <Box className="title-content" sx={{ flex: 1 }}>
             <Typography
               sx={{
                 fontSize: '14px',
@@ -536,7 +537,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
               {ticket.eventName}
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', gap: 1 }}>
+          <Box className="title-links" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', gap: 1 }}>
             <Link
               href="#"
               onClick={(e) => { e.preventDefault(); handleReceipt(); }}
@@ -568,16 +569,27 @@ const TicketCard: React.FC<TicketCardProps> = ({
         </Box>
 
         {/* Details section */}
-        <Box sx={{ mt: 1.5 }}>
+        <Box 
+          className="details-section" 
+          sx={{ 
+            mt: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+            '& > *': {
+              borderTop: `1px solid ${colors.subtle}`,
+              pt: 1,
+            },
+          }}
+        >
           {/* Venue */}
           <Box
+            className="venue-row"
             sx={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               py: 0.5,
-              borderTop: `1px solid ${colors.subtle}`,
-              mb: 1.5,
             }}
           >
             <Typography
@@ -623,12 +635,12 @@ const TicketCard: React.FC<TicketCardProps> = ({
 
           {/* Ticket type */}
           <Box
+            className="ticket-type-row"
             sx={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               py: 0.5,
-              borderTop: `1px solid ${colors.subtle}`,
             }}
           >
             <Typography
@@ -657,69 +669,34 @@ const TicketCard: React.FC<TicketCardProps> = ({
             </Typography>
           </Box>
         </Box>
-      </Box>
 
-      {/* Extended ticket section with details */}
-      <Box
-        className="middle-section"
-        sx={{
-          height: 200,
-          borderRadius: '16px',
-          backgroundColor: '#ffffff',
-          ...innerShadowStyle,
-          ...dropShadowStyle,
-          overflow: 'hidden',
-          position: 'relative',
-          // Background image and blur applied via pseudo-element
-          ...(ticket.eventImage && {
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundImage: `url('${ticket.eventImage}')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-              filter: 'blur(17.15px)',
-              opacity: 0.15,
-              zIndex: 0,
-            }
-          }),
-          // Border
-          borderLeft: `1px solid ${colors.subtle}`,
-          borderRight: `1px solid ${colors.subtle}`,
-          borderBottom: `1px solid ${colors.subtle}`,
-          borderTop: 'none',
-          // Content container
-          display: 'flex',
-          gap: 1.5,
-          padding: '12px',
-          alignItems: 'center',
-          '& > *': {
-            position: 'relative',
-            zIndex: 1,
-          }
-        }}
-      >
+        {/* Extended details section */}
+        <Box
+          className="extended-details-section"
+          sx={{
+            display: 'flex',
+            gap: 1.5,
+            mt: 2,
+            flex: 1,
+          }}
+        >
           {/* Left section - Details */}
           <Box
+            className="ticket-info-section"
             sx={{
               flex: 1,
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'space-between',
-              height: '100%',
+              // height: '100%',
+              gap: 2,
               '& > *': {
                 borderTop: `1px solid ${colors.subtle}`,
-                paddingTop: '6px',
+                pt: 1,
               },
             }}
           >
             {/* Date Group */}
-            <Box>
+            <Box className="date-group">
               <Typography
                 sx={{
                   fontSize: '12px',
@@ -735,12 +712,12 @@ const TicketCard: React.FC<TicketCardProps> = ({
               </Typography>
               <Typography
                 sx={{
-                  fontSize: '12px',
+                  fontSize: '13px',
                   color: colors.primary,
                   fontWeight: 900,
                   fontFamily: "'Inter', sans-serif",
-                  letterSpacing: '-0.36px',
-                  lineHeight: 1.2,
+                  letterSpacing: '-3%',
+                  lineHeight: 1.3,
                 }}
               >
                 {(() => {
@@ -762,7 +739,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
             </Box>
 
             {/* Time Group */}
-            <Box>
+            <Box className="time-group">
               <Typography
                 sx={{
                   fontSize: '12px',
@@ -778,7 +755,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
               </Typography>
               <Typography
                 sx={{
-                  fontSize: '12px',
+                  fontSize: '13px',
                   color: colors.primary,
                   fontWeight: 900,
                   fontFamily: "'Inter', sans-serif",
@@ -792,10 +769,10 @@ const TicketCard: React.FC<TicketCardProps> = ({
             </Box>
 
             {/* Admit Group */}
-            <Box>
+            <Box className="admit-group">
               <Typography
                 sx={{
-                  fontSize: '12px',
+                  fontSize: '13px',
                   color: colors.primary,
                   fontWeight: 900,
                   fontFamily: "'Inter', sans-serif",
@@ -809,6 +786,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
 
             {/* Ticket ID */}
             <Typography
+              className="ticket-id"
               sx={{
                 fontSize: '10px',
                 color: 'rgba(0,0,0,0.6)',
@@ -824,8 +802,9 @@ const TicketCard: React.FC<TicketCardProps> = ({
 
           {/* Right section - QR Code or Waitlisted Text */}
           <Box
+            className="qr-code-section"
             sx={{
-              flex: 1,
+              flex: 1.5,
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
@@ -833,7 +812,6 @@ const TicketCard: React.FC<TicketCardProps> = ({
               backgroundColor: '#FFFFFF',
               boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.05)',
               borderRadius: '8px',
-              height: '100%',
             }}
           >
             {ticket.status === 'waitlisted' ? (
@@ -879,6 +857,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
             )}
           </Box>
         </Box>
+      </Box>
 
       {/* Bottom section with transfer/waitlist buttons */}
       <Box
@@ -915,7 +894,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
               backgroundSize: 'cover',
               backgroundPosition: '0 120%',
               backgroundRepeat: 'no-repeat',
-              filter: 'blur(17.15px)',
+              filter: 'blur(25px)',
               opacity: 0.15,
               zIndex: 0,
             }

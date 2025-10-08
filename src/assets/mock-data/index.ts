@@ -136,9 +136,9 @@ export const mockWaitlistItems: WaitlistItem[] = [
   // Active entries (ongoing) - chronological order
   {
     id: 1,
-    eventName: "Pursuit Of Happiness W/ Vosters & Dj Chazz Rockwell",
+    eventName: "Mach-Hommy",
     status: "ongoing",
-    expirationDate: "3 days before",
+    expirationDate: "Jan 15, 2025 before 11:59PM",
     ticketId: "TKT-001-2024",
     isClaimed: false,
     quantity: 1,
@@ -148,9 +148,9 @@ export const mockWaitlistItems: WaitlistItem[] = [
   },
   {
     id: 4,
-    eventName: "Electronic Music Night",
+    eventName: "Gimme Gimme",
     status: "ongoing",
-    expirationDate: "1 week before",
+    expirationDate: "Jan 20, 2025 before 11:59PM",
     ticketId: "TKT-004-2024",
     isClaimed: false,
     quantity: 3,
