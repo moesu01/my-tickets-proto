@@ -256,7 +256,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
           sx={{ 
             fontWeight: 700,
             fontSize: '12px',
-            color: 'rgba(0,0,0,.75)',
+            color: colors.primaryText,
             textTransform: 'uppercase',
             letterSpacing: '1%',
             // width: '100%',
