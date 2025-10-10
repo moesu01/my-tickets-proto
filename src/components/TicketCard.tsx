@@ -284,9 +284,11 @@ const TicketCard: React.FC<TicketCardProps> = ({
     const date = new Date(dateString);
     const today = new Date();
     
-    // Reset time to start of day for accurate day comparison
+    // Set event time to end of day (23:59:59) to ensure events scheduled for "today" 
+    // are considered upcoming until the day is over
+    date.setHours(23, 59, 59, 999);
+    // Reset today to start of day for accurate day comparison
     today.setHours(0, 0, 0, 0);
-    date.setHours(0, 0, 0, 0);
     
     const diffTime = date.getTime() - today.getTime();
     const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));

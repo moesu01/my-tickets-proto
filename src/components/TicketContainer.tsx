@@ -41,6 +41,11 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
   const getTimeUntilEvent = (eventDate: string) => {
     const now = new Date();
     const event = new Date(eventDate);
+    
+    // Set event time to end of day (23:59:59) to ensure events scheduled for "today" 
+    // are considered upcoming until the day is over
+    event.setHours(23, 59, 59, 999);
+    
     const diffMs = event.getTime() - now.getTime();
     
     if (diffMs <= 0) {
@@ -67,6 +72,10 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
     
     return tickets.filter(ticket => {
       const eventDate = new Date(ticket.date);
+      // Set event time to end of day to ensure events scheduled for "today" 
+      // are considered upcoming until the day is over
+      eventDate.setHours(23, 59, 59, 999);
+      
       return eventDate >= today && eventDate <= twoWeeksFromNow && 
              (ticket.status === 'upcoming' || ticket.status === 'waitlisted');
     }).length;

@@ -1,5 +1,19 @@
 import { Ticket, WaitlistItem, Profile, Event } from '../../types';
 
+// Helper function to generate dates relative to today
+const getDateString = (daysFromToday: number): string => {
+  const date = new Date();
+  date.setDate(date.getDate() + daysFromToday);
+  
+  // Use local timezone and create a date string that will be interpreted as local time
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  
+  // Create a date string that includes timezone info to ensure it's interpreted as local time
+  return `${year}-${month}-${day}T00:00:00`;
+};
+
 // Mock data for development and testing
 export const mockTickets: Ticket[] = [
   {
@@ -9,7 +23,7 @@ export const mockTickets: Ticket[] = [
     venue: "The Brooklyn Monarch",
     location: "Brooklyn, NY",
     ticketType: "VIP-Table Seating (up to 6 guests)",
-    date: "2025-10-10",
+    date: "DYNAMIC_TODAY", // Will be replaced with actual today's date
     time: "6:00 → 10:00PM",
     admitCount: 6,
     ticketId: "012390zzv9a0d9f80",
@@ -25,7 +39,7 @@ export const mockTickets: Ticket[] = [
     venue: "Le Poisson Rouge",
     location: "New York, NY",
     ticketType: "GA Tier 1",
-    date: "2025-10-11",
+    date: "DYNAMIC_TOMORROW", // Will be replaced with actual tomorrow's date
     time: "11:00 → 3:00AM",
     admitCount: 4,
     ticketId: "012390zzv9a0d9f81",
@@ -41,7 +55,7 @@ export const mockTickets: Ticket[] = [
     venue: "Le Poisson Rouge",
     location: "New York, NY",
     ticketType: "GA Tier 2",
-    date: "2025-10-11",
+    date: "DYNAMIC_TOMORROW", // Will be replaced with actual tomorrow's date
     time: "11:00 → 3:00AM",
     admitCount: 1,
     ticketId: "012390zzv9a0d9f88",
@@ -105,7 +119,7 @@ export const mockTickets: Ticket[] = [
     venue: "Le Poisson Rouge",
     location: "New York, NY",
     ticketType: "GA Tier 1",
-    date: "2025-09-15",
+    date: "DYNAMIC_3_DAYS", // Will be replaced with actual 3 days from today
     time: "11:00PM",
     admitCount: 2,
     ticketId: "012390zzv9a0d9f85",
@@ -262,7 +276,7 @@ export const minimalMockTickets: Ticket[] = [
     venue: "The Brooklyn Monarch",
     location: "Brooklyn, NY",
     ticketType: "VIP-Table Seating (up to 6 guests)",
-    date: "2025-10-10",
+    date: "DYNAMIC_TODAY", // Will be replaced with actual today's date
     time: "6:00 → 10:00PM",
     admitCount: 6,
     ticketId: "012390zzv9a0d9f80",
@@ -277,9 +291,38 @@ export const minimalMockWaitlistItems: WaitlistItem[] = [];
 
 // Function to get the appropriate dataset based on mode
 export const getMockData = (useMinimalData: boolean) => {
+  // Get the base data
+  const baseTickets = useMinimalData ? minimalMockTickets : mockTickets;
+  const baseWaitlistItems = useMinimalData ? minimalMockWaitlistItems : mockWaitlistItems;
+  
+  // Replace dynamic date placeholders with actual dates
+  const ticketsWithDynamicDates = baseTickets.map(ticket => {
+    let dynamicDate = ticket.date;
+    
+    switch (ticket.date) {
+      case "DYNAMIC_TODAY":
+        dynamicDate = getDateString(0);
+        break;
+      case "DYNAMIC_TOMORROW":
+        dynamicDate = getDateString(1);
+        break;
+      case "DYNAMIC_3_DAYS":
+        dynamicDate = getDateString(3);
+        break;
+      default:
+        // Keep original date if it's not a dynamic placeholder
+        dynamicDate = ticket.date;
+    }
+    
+    return {
+      ...ticket,
+      date: dynamicDate
+    };
+  });
+  
   return {
-    tickets: useMinimalData ? minimalMockTickets : mockTickets,
-    waitlistItems: useMinimalData ? minimalMockWaitlistItems : mockWaitlistItems,
+    tickets: ticketsWithDynamicDates,
+    waitlistItems: baseWaitlistItems,
     profile: mockProfile,
     recommendedEvents: mockRecommendedEvents
   };
