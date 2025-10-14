@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Box, IconButton, Typography, Link } from '@mui/material';
-import { ChevronLeft, ChevronRight, CurrencyExchangeOutlined, TimerOutlined, KeyboardArrowDown, LocationOn } from '@mui/icons-material';
+import { ChevronLeft, ChevronRight, CurrencyExchangeOutlined, TimerOutlined, KeyboardArrowDown, LocationOn, NearMe } from '@mui/icons-material';
 import TicketCard from './TicketCard';
+import InfoContainer from './InfoContainer';
 import { Ticket, WaitlistItem } from '../types';
 import { COLORS, COLORS_DARK } from '../theme';
 
@@ -252,8 +253,8 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
           alignItems: { xs: 'center', md: 'flex-start' }, 
           justifyContent: 'space-between',
           mb: 0,
-          pt: 2,
-          pb: { xs: 0, md: 2 },
+          pt: 1,
+          pb: { xs: 0, md: 1 },
           minWidth: { xs: '100%', md: '280px' },
           width: { xs: '100%', md: 'auto' }
         }}
@@ -436,69 +437,25 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
             }}
           >
             {/* Single waitlist item */}
-            <Box
-              component="li"
+            <InfoContainer
+              leftIcon={TimerOutlined}
+              title="Waitlist"
+              subtitle="1 listed • 1 joined"
+              rightIcon={KeyboardArrowDown}
               onClick={scrollToWaitlistSection}
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: 1.5,
-                fontSize: '14px',
-                color: colors.primaryText,
-                fontWeight: 500,
-                borderTop: `1px solid ${colors.borderLight}`,
-                pt: 1.5,
-                mb: 0,
-                cursor: 'pointer',
-                '&:hover': {
-                  opacity: 0.8
-                }
-              }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                <TimerOutlined 
-                  sx={{ 
-                    fontSize: '20px', 
-                    color: colors.iconColor 
-                  }} 
-                />
-                <Box>
-                  <Typography 
-                    sx={{ 
-                      fontSize: '0.85rem', 
-                      fontWeight: 700,
-                      lineHeight: 1.2,
-                      mb: 0.25
-                    }}
-                  >
-                    Waitlist
-                  </Typography>
-                  <Typography 
-                    sx={{ 
-                      fontSize: '0.875rem', 
-                      fontWeight: 500,
-                      lineHeight: 1.2
-                    }}
-                  >
-                    1 listed • 1 joined
-                  </Typography>
-                </Box>
-              </Box>
-              <KeyboardArrowDown 
-                sx={{ 
-                  fontSize: '20px', 
-                  color: colors.iconColor 
-                }} 
-              />
-            </Box>
+              colors={colors}
+              display={{ xs: 'none', md: 'flex' }}
+            />
           </Box>
         )}
 
         {/* Venue Information - Desktop Only for single event */}
         {tickets.length === 1 && (
-          <Box
-            className="venue-location-box"
+          <InfoContainer
+            leftIcon={LocationOn}
+            title="Get Directions to"
+            subtitle={tickets[0].venue}
+            rightIcon={NearMe}
             onClick={() => {
               // Open maps with venue address
               const venue = tickets[0];
@@ -506,65 +463,10 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
               const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
               window.open(mapsUrl, '_blank');
             }}
-            sx={{
-              display: { xs: 'none', md: 'flex' }, // Only show on desktop
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: 1.5,
-              fontSize: '14px',
-              color: colors.primaryText,
-              fontWeight: 500,
-              borderTop: `1px solid ${colors.borderLight}`,
-              pt: 1.5,
-              mb: 0,
-              width: '100%',
-              cursor: 'pointer',
-              '&:hover': {
-                opacity: 0.8
-              }
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
-              <LocationOn 
-                sx={{ 
-                  fontSize: '20px', 
-                  color: colors.iconColor 
-                }} 
-              />
-              <Box>
-                <Typography 
-                  sx={{ 
-                    fontSize: '0.85rem', 
-                    fontWeight: 700,
-                    lineHeight: 1.2,
-                    mb: 0.25
-                  }}
-                >
-                  {tickets[0].venue}
-                </Typography>
-                <Typography 
-                  sx={{ 
-                    fontSize: '0.875rem', 
-                    fontWeight: 500,
-                    lineHeight: 1.2
-                  }}
-                >
-                  {tickets[0].location}
-                </Typography>
-                <Typography 
-                  sx={{ 
-                    fontSize: '0.875rem', 
-                    fontWeight: 500,
-                    color: colors.primaryText,
-                    textDecoration: 'underline',
-                    mt: .5
-                  }}
-                >
-                  Get Directions
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
+            colors={colors}
+            display={{ xs: 'none', md: 'flex' }}
+            alignItems="flex-start"
+          />
         )}
       </Box>
 
@@ -581,7 +483,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
           pl: { xs: tickets.length === 1 ? 0 : 4, md: 1.65 }, // Conditional padding: 0 for single ticket (centered), 4 for multiple tickets (scroll snap)
           pr: tickets.length === 1 
             ? { xs: 0, md: 1.65 } // No padding on mobile for single ticket
-            : { xs: 4, md: 24 }, // No padding on mobile, extra right padding for multiple tickets on desktop
+            : { xs: 8, md: 24 }, // No padding on mobile, extra right padding for multiple tickets on desktop
           // Extend container width so CSS mask fades outside visible area
           width: '100%',
           // marginLeft: '-%', // Center the extended container
@@ -693,9 +595,11 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
           >
             {/* Venue Information - Only show for single event */}
             {tickets.length === 1 && (
-              <Box
-                component="li"
-                className="venue-location-box"
+              <InfoContainer
+                leftIcon={LocationOn}
+                title={tickets[0].venue}
+                subtitle={tickets[0].location}
+                rightIcon={NearMe}
                 onClick={() => {
                   // Open maps with venue address
                   const venue = tickets[0];
@@ -703,131 +607,21 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
                   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
                   window.open(mapsUrl, '_blank');
                 }}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: 1.5,
-                  fontSize: '14px',
-                  color: colors.primaryText,
-                  fontWeight: 500,
-                  borderTop: `1px solid ${colors.borderLight}`,
-                  pt: 1.5,
-                  pb: 0,
-                  mb: 0,
-                  cursor: 'pointer',
-                  '&:hover': {
-                    opacity: 0.8
-                  }
-                }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
-                  <LocationOn 
-                    sx={{ 
-                      fontSize: '20px', 
-                      color: colors.iconColor 
-                    }} 
-                  />
-                  <Box>
-                    <Typography 
-                      sx={{ 
-                        fontSize: '0.85rem', 
-                        fontWeight: 700,
-                        lineHeight: 1.2,
-                        mb: 0.25
-                      }}
-                    >
-                      {tickets[0].venue}
-                    </Typography>
-                    <Typography 
-                      sx={{ 
-                        fontSize: '0.875rem', 
-                        fontWeight: 500,
-                        lineHeight: 1.2
-                      }}
-                    >
-                      {tickets[0].location}
-                    </Typography>
-                    <Typography 
-                      sx={{ 
-                        fontSize: '0.875rem', 
-                        fontWeight: 500,
-                        color: colors.primaryText,
-                        textDecoration: 'underline',
-                        mt: .5
-                      }}
-                    >
-                      Get Directions
-                    </Typography>
-                  </Box>
-                </Box>
-                <KeyboardArrowDown 
-                  sx={{ 
-                    fontSize: '20px', 
-                    color: colors.iconColor 
-                  }} 
-                />
-              </Box>
+                colors={colors}
+                alignItems="flex-start"
+              />
             )}
 
             {/* Waitlist Information */}
             {waitlistItems.length > 0 && (
-              <Box
-                component="li"
+              <InfoContainer
+                leftIcon={TimerOutlined}
+                title="Waitlist"
+                subtitle="1 listed • 1 joined"
+                rightIcon={KeyboardArrowDown}
                 onClick={scrollToWaitlistSection}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: 1.5,
-                  fontSize: '14px',
-                  color: colors.primaryText,
-                  fontWeight: 500,
-                  borderTop: `1px solid ${colors.borderLight}`,
-                  pt: 1.5,
-                  mb: 0,
-                  cursor: 'pointer',
-                  '&:hover': {
-                    opacity: 0.8
-                  }
-                }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                  <TimerOutlined 
-                    sx={{ 
-                      fontSize: '20px', 
-                      color: colors.iconColor 
-                    }} 
-                  />
-                  <Box>
-                    <Typography 
-                      sx={{ 
-                        fontSize: '0.85rem', 
-                        fontWeight: 700,
-                        lineHeight: 1.2,
-                        mb: 0.25
-                      }}
-                    >
-                      Waitlist
-                    </Typography>
-                    <Typography 
-                      sx={{ 
-                        fontSize: '0.875rem', 
-                        fontWeight: 500,
-                        lineHeight: 1.2
-                      }}
-                    >
-                      1 listed • 1 joined
-                    </Typography>
-                  </Box>
-                </Box>
-                <KeyboardArrowDown 
-                  sx={{ 
-                    fontSize: '20px', 
-                    color: colors.iconColor 
-                  }} 
-                />
-              </Box>
+                colors={colors}
+              />
             )}
           </Box>
         </Box>

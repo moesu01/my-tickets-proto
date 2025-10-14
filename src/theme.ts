@@ -1,5 +1,12 @@
 import { createTheme } from '@mui/material/styles';
 
+// Extend the theme type to include custom background colors
+declare module '@mui/material/styles' {
+  interface TypeBackground {
+    hover: string;
+  }
+}
+
 // Color constants
 export const COLORS = {
   primaryText: '#353535', // Main text color for headers and important content
@@ -32,6 +39,7 @@ export const lightTheme = createTheme({
     background: {
       default: '#E1E2E6', // Light gray background
       paper: '#f8f9fa', // Light gray background
+      hover: '#ffffff', // Light gray hover background
     },
     text: {
       primary: '#333333', // Dark gray text
@@ -212,6 +220,7 @@ export const darkTheme = createTheme({
     background: {
       default: '#292929', // Dark background
       paper: '#080808', // Darker paper background
+      hover: '#1e1e1e', // Darker hover background
     },
     text: {
       primary: '#ffffff', // White text for dark mode
