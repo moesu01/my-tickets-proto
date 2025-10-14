@@ -148,7 +148,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
       
       setScrollPosition(scrollLeft);
       // Small grace so buttons flip cleanly (from Builder.io article)
-      setCanScrollLeft(scrollLeft > 5);
+      setCanScrollLeft(scrollLeft > 5); 
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 5);
       
       // Calculate which ticket is currently active based on scroll position
@@ -195,6 +195,13 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
       return;
     }
     
+    // Preemptively update scroll position to trigger mask change immediately
+    // This eliminates the delay caused by smooth scrolling animation
+    const cardWidth = children[0].offsetWidth || 1;
+    const gap = 16; // Approximate gap between cards
+    const estimatedScrollLeft = targetIndex * (cardWidth + gap);
+    setScrollPosition(estimatedScrollLeft); // Immediate mask update before smooth scroll starts
+    
     children[targetIndex].scrollIntoView({
       behavior: 'smooth',
       block: 'nearest',
@@ -217,6 +224,13 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
     if (currentIndex <= 0) {
       return;
     }
+    
+    // Preemptively update scroll position to trigger mask change immediately
+    // This eliminates the delay caused by smooth scrolling animation
+    const cardWidth = children[0].offsetWidth || 1;
+    const gap = 16; // Approximate gap between cards
+    const estimatedScrollLeft = targetIndex * (cardWidth + gap);
+    setScrollPosition(estimatedScrollLeft); // Immediate mask update before smooth scroll starts
     
     children[targetIndex].scrollIntoView({
       behavior: 'smooth',
@@ -578,7 +592,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
             display: { xs: 'block', md: 'none' }, // Only show on mobile
             width: '100%',
             pt: 0,
-            pb: 2,
+            pb: 1,
             px: 2,
           }}
         >

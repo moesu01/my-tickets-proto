@@ -1,45 +1,21 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Box, IconButton, Typography } from '@mui/material';
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { Box, IconButton, Typography, Collapse } from '@mui/material';
+import { ChevronLeft, ChevronRight, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import EventCard from './EventCard';
 import { RecommendedEventsContainerProps } from '../types';
 import { COLORS, COLORS_DARK } from '../theme';
+import { transitions } from '../utils/transitions';
 
 const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
   events,
   isDarkMode = false,
 }) => {
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
   const eventsContainerRef = useRef<HTMLDivElement>(null);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   // Use appropriate color constants based on theme mode
   const colors = isDarkMode ? COLORS_DARK : COLORS;
 
-  // Handle scroll events for dynamic mask and button states
-  useEffect(() => {
-    const container = eventsContainerRef.current;
-    if (!container) return;
-
-    const handleScroll = () => {
-      const { scrollLeft, scrollWidth, clientWidth } = container;
-      
-      setScrollPosition(scrollLeft);
-      // Small grace so buttons flip cleanly
-      setCanScrollLeft(scrollLeft > 5);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 5);
-    };
-
-    container.addEventListener('scroll', handleScroll);
-    
-    // Initial check
-    handleScroll();
-
-    return () => {
-      container.removeEventListener('scroll', handleScroll);
-    };
-  }, [events]);
 
   const scrollToNext = () => {
     const container = eventsContainerRef.current;
@@ -98,7 +74,7 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
       mb: 4,
       borderRadius: '16px',
       py: 1,
-      px: { xs: 0, md: 2 },
+      px: { xs: 0, md: 0 },
       backgroundColor: 'background.paper',
       display: 'flex',
       flexDirection: 'column',
@@ -109,17 +85,24 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
       <Box 
         sx={{ 
           display: 'flex', 
-          alignItems: 'center', 
-          flexDirection: 'column',
+          alignItems: { xs: 'center', md: 'flex-start' }, 
+          flexDirection: { xs: 'column', md: 'row' },
           justifyContent: 'space-between',
           mb: 0,
-          px: 0,
+          px: 2,
           pt: 1,
-          gap: 1,
-
+          gap: 2,
         }}
       >
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' , gap: 0.5}}>
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: { xs: 'center', md: 'flex-start' },
+            gap: 1,
+            flex: 1
+          }}
+        >
           {/* Subhead */}
           <Typography 
             variant="h6" 
@@ -133,7 +116,8 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
               pt: { xs: 0, md: 0 },
               mb: 0,
               borderRadius: '10px',
-              textAlign: 'left'
+              textAlign: 'left',
+              ...transitions.A(isExpanded),
             }}
           >
             Recommended Events
@@ -154,112 +138,132 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
           >
             Picked for you
           </Typography>
+
+          {/* Arrow Navigation Buttons */}
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 1,
+              ...transitions.A(isExpanded),
+            }}
+          >
+            <IconButton
+              onClick={scrollToPrevious}
+              size="small"
+              sx={{
+                backgroundColor: 'background.paper',
+                color: 'theme.palette.text.primary',
+                border: '1px solid #ccc',
+                '&:hover': {
+                  backgroundColor: 'background.default',
+                },
+                width: 32,
+                height: 32,
+              }}
+            >
+              <ChevronLeft fontSize="small" />
+            </IconButton>
+            <IconButton
+              onClick={scrollToNext}
+              size="small"
+              sx={{
+                backgroundColor: 'background.paper',
+                color: 'theme.palette.text.primary',
+                border: '1px solid #ccc',
+                '&:hover': {
+                  backgroundColor: 'background.default',
+                },
+                width: 32,
+                height: 32,
+              }}
+            >
+              <ChevronRight fontSize="small" />
+            </IconButton>
+          </Box>
         </Box>
 
-        {/* Arrow Navigation Buttons */}
+        {/* Collapsible Chevron */}
         <Box
+          onClick={() => setIsExpanded(!isExpanded)}
           sx={{
-            display: 'flex', // Show on all screen sizes
-            gap: 1,
-          }}
-        >
-        <IconButton
-          onClick={scrollToPrevious}
-          disabled={!canScrollLeft}
-          size="small"
-          sx={{
-            backgroundColor: 'background.paper',
-            color: 'theme.palette.text.primary',
-            border: '1px solid #ccc',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            aspectRatio: '1/1',
+            border: `1px solid #e2e8f0`,
+            borderRadius: '8px',
+            padding: '8px',
+            cursor: 'pointer',
+            transition: 'all 0.15s ease-out',
+            willChange: 'transform, background-color, box-shadow',
             '&:hover': {
-              backgroundColor: 'background.default',
-            },
-            '&:disabled': {
-              backgroundColor: 'transparent',
-              color: 'theme.palette.text.secondary',
-            },
-            width: 32,
-            height: 32,
+              backgroundColor: 'background.hover',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+              borderColor: 'transparent',
+              '& .MuiSvgIcon-root': {
+                color: '#1976d2', // Blue color
+                filter: 'drop-shadow(0 2px 6px rgba(25, 118, 210, .5))', // Blue glow effect on SVG paths
+              }
+            }
           }}
         >
-          <ChevronLeft fontSize="small" />
-        </IconButton>
-        <IconButton
-          onClick={scrollToNext}
-          disabled={!canScrollRight}
-          size="small"
-          sx={{
-            backgroundColor: 'background.paper',
-            color: 'theme.palette.text.primary',
-            border: '1px solid #ccc',
-            '&:hover': {
-              backgroundColor: 'background.default',
-            },
-            '&:disabled': {
-              backgroundColor: 'transparent',
-              color: 'theme.palette.text.secondary',
-            },
-            width: 32,
-            height: 32,
-          }}
-        >
-          <ChevronRight fontSize="small" />
-        </IconButton>
+          {isExpanded ? (
+            <KeyboardArrowUp sx={{ 
+              fontSize: '24px', 
+              color: colors.primaryText,
+              transition: 'all 0.15s ease-out',
+              willChange: 'color, filter'
+            }} />
+          ) : (
+            <KeyboardArrowDown sx={{ 
+              fontSize: '24px', 
+              color: colors.primaryText,
+              transition: 'all 0.15s ease-out',
+              willChange: 'color, filter'
+            }} />
+          )}
         </Box>
       </Box>
 
       {/* Events Container */}
-      <Box 
-        ref={eventsContainerRef}
-        id="recommended-events-container"
-        className="recommended-events-container"
-        sx={{ 
-          display: 'flex', // Show on all screen sizes
-          gap: { xs: 4, md: 6 }, // Smaller gap on mobile (32px), larger on desktop (48px)
-          py: 2,
-          pl: { xs: 4, md: 1.65 }, // Less padding on mobile
-          pr: { xs: 8, md: 6 }, // Extra padding on mobile to show last card fully
-          // Extend container width so CSS mask fades outside visible area
-          width: '100%',
-          overflowX: 'auto', // Enable horizontal scrolling
-          overflowY: 'visible', // Prevent vertical scrolling
-          // CSS Scroll Snapping
-          scrollSnapType: 'x mandatory',
-          scrollPaddingLeft: { xs: '24px', md: '24px' }, // Adjust scroll padding for mobile
-          // Hide scrollbars
-          scrollbarWidth: 'none', // Firefox
-          '&::-webkit-scrollbar': {
-            display: 'none', // Chrome, Safari, Edge
-          },
-          // Dynamic CSS mask based on scroll position
-          maskImage: scrollPosition > 0 
-            ? 'linear-gradient(to right, transparent 0%, black 5%, black 90%, transparent 100%)'
-            : 'linear-gradient(to right, black 0%, black 90%, transparent 100%)',
-          WebkitMaskImage: scrollPosition > 0 
-            ? 'linear-gradient(to right, transparent 0%, black 5%, black 90%, transparent 100%)'
-            : 'linear-gradient(to right, black 0%, black 90%, transparent 100%)',
-          maskSize: '100% 100%', // Make mask 100% of container width
-          WebkitMaskSize: '100% 100%',
-          maskPosition: 'center', // Center the mask on the container
-          WebkitMaskPosition: 'center',
-          maskRepeat: 'no-repeat',
-          WebkitMaskRepeat: 'no-repeat',
-          // Smooth transition between mask states
-          transition: 'mask-image 0.2s ease-out, -webkit-mask-image 0.2s ease-out',
-        }}
-      >
-        {events.map((event) => (
-          <Box
-            key={event.id}
-            sx={{
-              scrollSnapAlign: 'start',
-              flexShrink: 0,
-            }}
-          >
-            <EventCard event={event} />
-          </Box>
-        ))}
-      </Box>
+      <Collapse in={isExpanded} timeout={200} easing="ease-out" unmountOnExit>
+        <Box 
+          ref={eventsContainerRef}
+          id="recommended-events-container"
+          className="recommended-events-container"
+          sx={{ 
+            display: 'flex', // Show on all screen sizes
+            gap: { xs: 4, md: 6 }, // Smaller gap on mobile (32px), larger on desktop (48px)
+            py: 2,
+            px: { xs: 4, md: 6 }, // Padding for mobile and desktop
+            // Extend container width so CSS mask fades outside visible area
+            width: '100%',
+            overflowX: 'auto', // Enable horizontal scrolling
+            overflowY: 'visible', // Prevent vertical scrolling
+            // CSS Scroll Snapping
+            scrollSnapType: 'x mandatory',
+            scrollPaddingLeft: { xs: '24px', md: '24px' }, // Adjust scroll padding for mobile
+            // Hide scrollbars
+            scrollbarWidth: 'none', // Firefox
+            '&::-webkit-scrollbar': {
+              display: 'none', // Chrome, Safari, Edge
+            },
+          }}
+        >
+          {events.map((event) => (
+            <Box
+              key={event.id}
+              sx={{
+                scrollSnapAlign: 'start',
+                flexShrink: 0,
+              }}
+            >
+              <EventCard event={event} />
+            </Box>
+          ))}
+        </Box>
+      </Collapse>
     </Box>
   );
 };

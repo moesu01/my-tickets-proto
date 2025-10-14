@@ -91,6 +91,14 @@ function App() {
         {/* Recommended Events Section */}
         <RecommendedEventsContainer events={mockRecommendedEvents} isDarkMode={isDarkMode} />
 
+        {/* Waitlist Section */}
+        <WaitlistSection 
+          waitlistItems={waitlistItems}
+          onRemove={(id: number) => console.log('Remove from waitlist:', id)}
+          onClaim={(id: number) => console.log('Claim ticket:', id)}
+          onUpdate={handleWaitlistUpdate}
+        />
+
         {/* Past Events Section */}
         <PastEventsSection 
           tickets={pastTickets}
@@ -98,14 +106,6 @@ function App() {
           onToggleExpanded={() => setPastEventsExpanded(!pastEventsExpanded)}
           onReceipt={handleReceipt}
           onViewTicket={handleViewTicket}
-        />
-
-        {/* Waitlist Section */}
-        <WaitlistSection 
-          waitlistItems={waitlistItems}
-          onRemove={(id: number) => console.log('Remove from waitlist:', id)}
-          onClaim={(id: number) => console.log('Claim ticket:', id)}
-          onUpdate={handleWaitlistUpdate}
         />
 
         {/* Profile Section */}

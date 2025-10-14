@@ -126,6 +126,36 @@ const scrollToNext = () => {
 3. **Test visually first** - If it looks right, it probably is right
 4. **Avoid complex JavaScript calculations** unless absolutely necessary
 
+## CSS Mask Delay Issue & Solution
+
+### Issue: Delay before CSS mask updates when using arrow navigation
+**Root Cause:** The CSS mask updates are tied to `scrollPosition` state, which only updates during scroll events. When using `scrollIntoView({ behavior: 'smooth' })`, there's a delay before scroll events start firing during the smooth animation.
+
+**Problem Sequence:**
+1. Arrow click → `scrollIntoView()` starts smooth scroll
+2. Smooth scrolling animation begins (takes time)
+3. Scroll events fire during animation
+4. `setScrollPosition()` updates state
+5. React re-render with new mask styles
+6. **Result:** Mask changes are delayed until scroll animation progresses
+
+**Solution:** Preemptively update scroll position state before smooth scroll starts
+```tsx
+// In scrollToNext() and scrollToPrevious()
+const cardWidth = children[0].offsetWidth || 1;
+const gap = 16; // Approximate gap between cards
+const estimatedScrollLeft = targetIndex * (cardWidth + gap);
+setScrollPosition(estimatedScrollLeft); // Immediate mask update
+
+children[targetIndex].scrollIntoView({
+  behavior: 'smooth', // Smooth scroll still works
+  block: 'nearest',
+  inline: 'center',
+});
+```
+
+**Key Learning:** When CSS effects depend on scroll state, update the state immediately before starting scroll animations to eliminate visual delays.
+
 ## Future Considerations
 
 - Consider using Intersection Observer API for more reliable active ticket detection

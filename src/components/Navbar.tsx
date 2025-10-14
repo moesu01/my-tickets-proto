@@ -22,13 +22,17 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode }) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            backgroundColor: 'background.paper',
+            backgroundColor: isDarkMode 
+              ? 'rgba(18, 18, 18, 0.8)' 
+              : 'rgba(255, 255, 255, 0.8)',
+            backdropFilter: 'blur(10px)',
+            filter: 'saturate(2)',
             borderRadius: '1.375rem',
             px: { xs: 2, sm: 3 },
             py: 1.5,
-            // boxShadow: isDarkMode 
-            //   ? '0px 4px 10px 0px rgba(0, 0, 0, 0.3)' 
-            //   : '0px 4px 10px 0px rgba(0, 0, 0, 0.05)',
+            boxShadow: (theme) => isDarkMode 
+              ? `0px 4px 20px 0px rgba(0, 0, 0, 0.4), inset 0px 0px 1px 0px ${theme.palette.background.paper}` 
+              : `0px 4px 20px 0px rgba(0, 0, 0, 0.1), inset 0px 0px 1px 0px ${theme.palette.background.paper}`,
           }}
         >
           {/* Logo Section */}
