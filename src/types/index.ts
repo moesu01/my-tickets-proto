@@ -89,4 +89,5 @@ export interface EventCardProps {
 
 export interface RecommendedEventsContainerProps {
   events: Event[];
+  isDarkMode?: boolean;
 }

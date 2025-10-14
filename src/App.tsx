@@ -89,7 +89,7 @@ function App() {
         />
 
         {/* Recommended Events Section */}
-        <RecommendedEventsContainer events={mockRecommendedEvents} />
+        <RecommendedEventsContainer events={mockRecommendedEvents} isDarkMode={isDarkMode} />
 
         {/* Past Events Section */}
         <PastEventsSection 
