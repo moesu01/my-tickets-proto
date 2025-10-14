@@ -120,7 +120,7 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
               ...transitions.A(isExpanded),
             }}
           >
-            Recommended Events
+            Picked For You
           </Typography>
           
           {/* Main Headline */}
@@ -136,7 +136,7 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
               textTransform: 'capitalize'
             }}
           >
-            Picked for you
+            Recommended Events
           </Typography>
 
           {/* Arrow Navigation Buttons */}
