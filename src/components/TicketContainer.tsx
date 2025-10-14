@@ -441,7 +441,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
               leftIcon={TimerOutlined}
               title="Waitlist"
               subtitle="1 listed • 1 joined"
-              rightIcon={KeyboardArrowDown}
+              rightIcon={TimerOutlined}
               onClick={scrollToWaitlistSection}
               colors={colors}
               display={{ xs: 'none', md: 'flex' }}
@@ -618,7 +618,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
                 leftIcon={TimerOutlined}
                 title="Waitlist"
                 subtitle="1 listed • 1 joined"
-                rightIcon={KeyboardArrowDown}
+                rightIcon={TimerOutlined}
                 onClick={scrollToWaitlistSection}
                 colors={colors}
               />

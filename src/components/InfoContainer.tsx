@@ -114,7 +114,7 @@ const InfoContainer: React.FC<InfoContainerProps> = ({
           border: `1px solid ${colors.borderLight}`,
           borderRadius: '8px',
           padding: '8px',
-          transition: 'all 0.1s ease-out',
+          transition: 'all 0.15s ease-out',
           willChange: 'transform, background-color, box-shadow',
         }}
       >
@@ -122,7 +122,7 @@ const InfoContainer: React.FC<InfoContainerProps> = ({
           sx={{ 
             fontSize: '24px', 
             color: colors.iconColor,
-            transition: 'all 0.2s ease-out',
+            transition: 'all 0.15s ease-out',
             willChange: 'color, filter'
           }} 
         />
