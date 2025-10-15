@@ -150,7 +150,7 @@ export const mockWaitlistItems: WaitlistItem[] = [
   // Active entries (ongoing) - chronological order
   {
     id: 1,
-    eventName: "Mach-Hommy",
+    eventName: "Mach-HOMMY Presents: Three Peat Tour",
     status: "ongoing",
     expirationDate: "Jan 15, 2025 before 11:59PM",
     ticketId: "TKT-001-2024",
@@ -158,11 +158,15 @@ export const mockWaitlistItems: WaitlistItem[] = [
     quantity: 1,
     ticketType: "GA Advance",
     totalPrice: "$144.00",
-    joinedOn: "Tue Sep 16, 07:36AM"
+    joinedOn: "Tue Sep 16, 07:36AM",
+    venue: "Le Poisson Rouge",
+    date: "Jan 15, 2025",
+    time: "11:00PM",
+    eventImage: `${process.env.PUBLIC_URL}/design/mach-hommy.png`
   },
   {
     id: 4,
-    eventName: "Gimme Gimme",
+    eventName: "GIMME Presents: Underground Hip-Hop Experience",
     status: "ongoing",
     expirationDate: "Jan 20, 2025 before 11:59PM",
     ticketId: "TKT-004-2024",
@@ -170,12 +174,16 @@ export const mockWaitlistItems: WaitlistItem[] = [
     quantity: 3,
     ticketType: "GA Advance",
     totalPrice: "$198.00",
-    joinedOn: "Thu Sep 12, 09:22AM"
+    joinedOn: "Thu Sep 12, 09:22AM",
+    venue: "Le Poisson Rouge",
+    date: "Jan 20, 2025",
+    time: "6:00PM",
+    eventImage: `${process.env.PUBLIC_URL}/design/gimme.png`
   },
   // Expired entries - chronological order
   {
     id: 2,
-    eventName: "Mach-HOMMY",
+    eventName: "Mach-HOMMY Presents: Three Peat Tour",
     status: "expired",
     expirationDate: "Expired",
     ticketId: "TKT-002-2024",
@@ -183,11 +191,15 @@ export const mockWaitlistItems: WaitlistItem[] = [
     quantity: 2,
     ticketType: "VIP Tier 1",
     totalPrice: "$89.00",
-    joinedOn: "Mon Aug 15, 02:15PM"
+    joinedOn: "Mon Aug 15, 02:15PM",
+    venue: "Le Poisson Rouge",
+    date: "Aug 15, 2024",
+    time: "11:00PM",
+    eventImage: `${process.env.PUBLIC_URL}/design/mach-hommy.png`
   },
   {
     id: 5,
-    eventName: "Classical Concert",
+    eventName: "New York Philharmonic Presents: Classical Masterpieces",
     status: "expired",
     expirationDate: "Expired",
     ticketId: "TKT-005-2024",
@@ -195,12 +207,16 @@ export const mockWaitlistItems: WaitlistItem[] = [
     quantity: 2,
     ticketType: "Premium Seating",
     totalPrice: "$156.00",
-    joinedOn: "Fri Jun 28, 04:30PM"
+    joinedOn: "Fri Jun 28, 04:30PM",
+    venue: "Carnegie Hall",
+    date: "Jun 28, 2024",
+    time: "8:00PM",
+    eventImage: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop"
   },
   // Cancelled entries - chronological order
   {
     id: 3,
-    eventName: "GIMME",
+    eventName: "GIMME Presents: Underground Hip-Hop Experience",
     status: "cancelled",
     expirationDate: "N/A",
     ticketId: "TKT-003-2024",
@@ -208,7 +224,60 @@ export const mockWaitlistItems: WaitlistItem[] = [
     quantity: 1,
     ticketType: "GA Tier 2",
     totalPrice: "$65.00",
-    joinedOn: "Wed Jul 20, 11:45AM"
+    joinedOn: "Wed Jul 20, 11:45AM",
+    venue: "Le Poisson Rouge",
+    date: "Jul 20, 2024",
+    time: "6:00PM",
+    eventImage: `${process.env.PUBLIC_URL}/design/gimme.png`
+  },
+  // Filled entries - showing refunds
+  {
+    id: 6,
+    eventName: "Brooklyn Summer Music Festival Presents: Electronic Dreams",
+    status: "filled",
+    expirationDate: "Filled",
+    ticketId: "TKT-006-2024",
+    isClaimed: true,
+    quantity: 2,
+    ticketType: "VIP Early Bird",
+    totalPrice: "+$89.00",
+    joinedOn: "Mon Jul 15, 10:30AM",
+    venue: "Brooklyn Steel",
+    date: "Jul 15, 2024",
+    time: "8:00PM",
+    eventImage: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop"
+  },
+  {
+    id: 7,
+    eventName: "Electronic Dreams Festival Presents: Future Beats",
+    status: "filled",
+    expirationDate: "Filled",
+    ticketId: "TKT-007-2024",
+    isClaimed: true,
+    quantity: 1,
+    ticketType: "GA Tier 1",
+    totalPrice: "+$45.00",
+    joinedOn: "Fri Jun 10, 03:15PM",
+    venue: "Le Poisson Rouge",
+    date: "Jun 10, 2024",
+    time: "11:00PM",
+    eventImage: `${process.env.PUBLIC_URL}/design/event_poster.png`
+  },
+  {
+    id: 8,
+    eventName: "Blue Note Presents: Jazz Legends Night",
+    status: "filled",
+    expirationDate: "Filled",
+    ticketId: "TKT-008-2024",
+    isClaimed: true,
+    quantity: 3,
+    ticketType: "Premium Seating",
+    totalPrice: "+$120.00",
+    joinedOn: "Tue May 28, 09:45AM",
+    venue: "Blue Note",
+    date: "May 28, 2024",
+    time: "7:00PM",
+    eventImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop"
   }
 ];
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button } from '@mui/material';
+import { ArrowOutward } from '@mui/icons-material';
 import { EventCardProps } from '../types';
 
 // Color extraction interface from ticket_example.tsx
@@ -236,7 +237,22 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
         borderBottomLeftRadius: '16px',
         borderBottomRightRadius: '16px',
         overflow: 'hidden',
-
+        cursor: 'pointer',
+        transition: 'all 200ms ease-out',
+        willChange: 'transform, opacity, background-color, box-shadow',
+        '&:hover': {
+          boxShadow: `inset 0 0 0 1px ${colors.subtle}, 0px 0px 20px -8px ${colors.secondary}`,
+        },
+        '&:hover .event-card-button': {
+          backgroundColor: 'rgba(0, 0, 0, .85)',
+          border: `1px solid rgba(255, 255, 255, 0.25)`,
+          paddingX: '16px',
+          boxShadow: '0px 6px 16px 0px rgba(0,0,0,0.2), 0px 3px 6px 0px rgba(0,0,0,0.15)',
+          transform: 'translateY(-1px)',
+        },
+        '&:hover .event-card-button .MuiSvgIcon-root': {
+          transform: 'rotate(45deg)',
+        },
       }}
     >
       {/* Content Section */}
@@ -310,9 +326,9 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
               sx={{
                 fontSize: '12px',
                 color: colors.secondary,
-                fontWeight: 400,
-                fontFamily: "'Inter', sans-serif",
-                letterSpacing: '-0.36px',
+                fontWeight: 500,
+                fontFamily: "'ibm plex mono', sans-serif",
+                letterSpacing: '.05em',
                 lineHeight: 1,
               }}
             >
@@ -347,9 +363,9 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
               sx={{
                 fontSize: '12px',
                 color: colors.secondary,
-                fontWeight: 400,
-                fontFamily: "'Inter', sans-serif",
-                letterSpacing: '-0.36px',
+                fontWeight: 500,
+                fontFamily: "'ibm plex mono', sans-serif",
+                letterSpacing: '.05em',
                 lineHeight: 1,
               }}
             >
@@ -443,31 +459,38 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
             className="event-card-button"
             onClick={event.onGetTickets}
             sx={{
-              backgroundColor: 'white',
+              border: `1px solid rgba(255, 255, 255, 0.25)`,
+              backgroundColor: 'rgba(255,255,255,0.15)',
               borderRadius: '8px',
-              boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)',
+              boxShadow: '0px 4px 12px 0px rgba(0,0,0,.25), 0px 2px 4px 0px rgba(0,0,0,0.1)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
+              justifyContent: 'space-between',
               padding: '10px 12px',
               width: '100%',
-              '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-              },
+              transition: 'all 200ms ease-out',
             }}
           >
             <Typography
               sx={{
-                fontSize: '12px',
-                color: '#333333',
+                fontSize: '13px',
+                color: '#ffffff',
                 fontWeight: 500,
                 fontFamily: "'Inter', sans-serif",
                 lineHeight: 1.6,
               }}
             >
-              Get Tickets
+              Get Tickets 
             </Typography>
+            <ArrowOutward 
+              sx={{
+                fontSize: '20px',
+                color: 'rgba(255, 255, 255, 0.75)',
+                ml: 1,
+                transition: 'transform 0.2s ease-out',
+              }}
+            />
           </Box>
         </Box>
       </Box>

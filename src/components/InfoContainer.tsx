@@ -48,7 +48,7 @@ const InfoContainer: React.FC<InfoContainerProps> = ({
         cursor: 'pointer',
         width: '100%',
         position: 'relative',
-        transition: 'all 0.2s ease-out',
+        transition: 'all 200ms ease-out',
         willChange: 'transform, opacity, background-color, box-shadow',
         // Touch-hitbox using ::after with inset
         '&::after': {
@@ -63,11 +63,13 @@ const InfoContainer: React.FC<InfoContainerProps> = ({
           // Right icon hover effects triggered by container hover
           '& .right-icon-container': {
             backgroundColor: 'background.hover',
+            
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-            borderColor: 'transparent',
-            '& .MuiSvgIcon-root': {
+
+            '& .right-icon': {
               color: '#1976d2', // Blue color
-              filter: 'drop-shadow(0 2px 6px rgba(25, 118, 210, .5))', // Blue glow effect on SVG paths
+              filter: 'drop-shadow(0 2px 6px rgba(25, 118, 210, .15))', // Blue glow effect on SVG paths
+
             }
           }
         }
@@ -84,10 +86,10 @@ const InfoContainer: React.FC<InfoContainerProps> = ({
         <Box>
           <Typography 
             sx={{ 
-              fontSize: '0.85rem', 
-              fontWeight: 700,
-              lineHeight: 1.2,
-              mb: 0.25
+              fontSize: '0.875rem', // 14px equivalent
+              fontWeight: 600,
+              color: colors.primaryText,
+              lineHeight: '1.25rem',
             }}
           >
             {title}
@@ -95,8 +97,10 @@ const InfoContainer: React.FC<InfoContainerProps> = ({
           <Typography 
             sx={{ 
               fontSize: '0.875rem', 
-              fontWeight: 500,
-              lineHeight: 1.2
+              fontWeight: 400,
+              color: colors.primaryText,
+              lineHeight: '1.25rem',
+              textTransform: 'capitalize'
             }}
           >
             {subtitle}
@@ -114,15 +118,16 @@ const InfoContainer: React.FC<InfoContainerProps> = ({
           border: `1px solid ${colors.borderLight}`,
           borderRadius: '8px',
           padding: '8px',
-          transition: 'all 0.15s ease-out',
+          transition: 'all 200ms ease-out',
           willChange: 'transform, background-color, box-shadow',
         }}
       >
         <RightIcon 
+          className="right-icon"
           sx={{ 
             fontSize: '24px', 
             color: colors.iconColor,
-            transition: 'all 0.15s ease-out',
+            transition: 'all 200ms ease-out',
             willChange: 'color, filter'
           }} 
         />

@@ -6,16 +6,22 @@ import {
   Collapse,
   Tooltip,
 } from '@mui/material';
+import { COLORS, COLORS_DARK } from '../theme';
 import {
   KeyboardArrowUp as ExpandLessIcon,
   KeyboardArrowDown as ExpandMoreIcon,
   SubdirectoryArrowRight as SubdirectoryArrowRightIcon,
+  TimerOutlined as TimerIcon,
+  ConfirmationNumberOutlined as ListIcon,
+  Close as CloseIcon,
 } from '@mui/icons-material';
 import { WaitlistItem } from '../types';
 import WaitlistEditModal from './WaitlistEditModal';
+import WaitlistCard from './WaitlistCard';
 
 interface WaitlistSectionProps {
   waitlistItems: WaitlistItem[];
+  isDarkMode?: boolean;
   onRemove: (itemId: number) => void;
   onClaim: (itemId: number) => void;
   onUpdate: (updatedItem: WaitlistItem) => void;
@@ -23,18 +29,26 @@ interface WaitlistSectionProps {
 
 const WaitlistSection: React.FC<WaitlistSectionProps> = ({
   waitlistItems,
+  isDarkMode = false,
   onRemove,
   onClaim,
   onUpdate,
 }) => {
+  // Use appropriate color constants based on theme mode
+  const colors = isDarkMode ? COLORS_DARK : COLORS;
   const [isExpanded, setIsExpanded] = useState(true);
   const [isInactiveExpanded, setIsInactiveExpanded] = useState(false);
+  const [isActiveExpanded, setIsActiveExpanded] = useState(false);
+  const [isListedExpanded, setIsListedExpanded] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedItemForEdit, setSelectedItemForEdit] = useState<WaitlistItem | null>(null);
 
-  const handleEditClick = (item: WaitlistItem) => {
-    setSelectedItemForEdit(item);
-    setEditModalOpen(true);
+  const handleEditClick = (itemId: number) => {
+    const item = waitlistItems.find(waitlistItem => waitlistItem.id === itemId);
+    if (item) {
+      setSelectedItemForEdit(item);
+      setEditModalOpen(true);
+    }
   };
 
   const handleEditClose = () => {
@@ -199,7 +213,7 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({
                 </Link>
                 <Link
                   component="button"
-                  onClick={() => handleEditClick(item)}
+                  onClick={() => handleEditClick(item.id)}
                   sx={{
                     fontSize: '0.75rem',
                     color: '#4a5568',
@@ -254,79 +268,380 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({
   return (
     <Box id="waitlist-section" className="waitlist-container" sx={{ 
       mb: 4,
-      p: 1.5, // 12px padding
-      backgroundColor: '#fafafa',
-      borderRadius: '8px',
-      boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)'
+      border: `1px solid ${colors.borderLight}`,
+      borderRadius: '16px',
+      py: 3,
+      px: { xs: 0, md: 3 },
+      backgroundColor: 'background.paper',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: { xs: 1, md: 1 },
+      position: 'relative',
+      boxShadow: '0px 4px 12px 0px rgba(0,0,0,.05), 0px 2px 4px 0px rgba(0,0,0,0.025)',
+
+      overflow: 'hidden', // Prevent content from overflowing the container
     }}>
-      {/* Header - matching Figma design */}
-      <Box 
-        className="waitlist-header" 
-        onClick={() => setIsExpanded(!isExpanded)}
+      {/* Waitlist Summary Header */}
+      <Typography 
+        variant="sectionHeader" 
+        component="h1" 
         sx={{ 
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          pb: 1,
-          pt: 1,
-          px: 0,
+          color: colors.primaryText,
+          pt: { xs: 0, md: 0 },
           mb: 0,
-          cursor: 'pointer',
-          '&:hover': {
-            opacity: 0.8
-          }
+          textAlign: { xs: 'center', md: 'left' }
         }}
       >
-        <Box sx={{ display: 'flex', gap: 1.25, alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center' }}>
-            <Typography variant="h5" sx={{ 
-              fontSize: '1.25rem', 
-              fontWeight: 400, 
-              color: '#4a5568',
-              letterSpacing: '-0.6px'
-            }}>
-              Waitlist
-            </Typography>
-            <Box sx={{ 
-              position: 'relative',
-              borderRadius: '29px',
-              width: '22px',
-              height: '22px'
-            }}>
-              <Box sx={{ 
+        WAITLIST
+      </Typography>
+      
+      {/* ===== FIRST HEADER: Active Waitlists ===== */}
+      <Box 
+        className="waitlist-active-header-container"
+        sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between',
+
+        }}
+      >
+        {/* Main content area with title and collapsible cards */}
+        <Box
+          className="waitlist-active-content"
+          sx={{
+            borderBottom: `1px solid ${colors.borderLight}`,
+            py: 1,
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: {
+              xs: 'center',
+              md: 'flex-start'
+            }
+          }}
+        >
+          {/* Title row with "You're on X waitlists" */}
+          <Box 
+            className="waitlist-active-title-row"
+            onClick={() => setIsActiveExpanded(!isActiveExpanded)}
+            sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'space-between',
+              width: '100%',
+              cursor: 'pointer',
+              transition: 'padding 200ms ease-out',
+              '&:hover': {
+                px: 1,
+                '& .timer-icon': {
+                  transform: 'rotate(21.5deg)',
+                }
+              }
+            }}
+          >
+            <Typography 
+              className="waitlist-active-title"
+              variant="h5" 
+              component="h2" 
+              sx={{ 
+                fontWeight: 600,
+                fontSize: '24px',
+                color: colors.primaryText,
+                letterSpacing: '-.0325em',
+                lineHeight: '1.1',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                p: 0.5,
-                width: '22px',
-                height: '22px'
-              }}>
-                <Typography variant="body2" sx={{ 
-                  fontSize: '0.75rem',
-                  fontWeight: 'bold',
-                  color: '#4a5568',
-                  lineHeight: 1
-                }}>
-                  {activeItems.length}
-                </Typography>
+                gap: 1,
+                textTransform: 'capitalize'
+              }}
+            >
+              <TimerIcon className="timer-icon" sx={{ fontSize: '24px', transition: 'transform 200ms ease-out' }} />
+              Joined Waitlists 
+              <Box 
+                className="waitlist-active-count-badge"
+                sx={{ 
+                  backgroundColor: '#1976d2', 
+                  color: 'white', 
+                  borderRadius: '100px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  fontSize: '18px',
+                  fontWeight: 500,
+                  lineHeight: 1,
+                  pr: 1.5,
+                  pl: 1.25,
+                  py: 1,
+                  aspectRatio: '1/1',
+                  height: '34px', // Fixed height
+                  width: '34px', // Fixed width
+                }}
+              >
+                {activeItems.length}
               </Box>
-              <Box sx={{
-                position: 'absolute',
-                inset: 0,
-                border: '1px solid #a0aec0',
-                borderRadius: '29px',
-                pointerEvents: 'none'
-              }} />
+            </Typography>
+
+            {/* Chevron button - positioned outside content to avoid collapse animation issues */}
+            <Box 
+              className="waitlist-active-chevron"
+        sx={{
+                 borderRadius: '16px',
+                 border: `1px solid ${colors.borderLight}`,
+                 backgroundColor: 'colors.background.paper',
+                   cursor: 'pointer',
+                   display: 'flex',
+                   alignItems: 'center',
+                   justifyContent: 'center',
+                   padding: '8px 7px 8px 12px',
+                   gap: 0.5,
+   
+                   transition: 'all 200ms ease-out',
+                   '&:hover': {
+                     backgroundColor: 'white',
+                     boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08), 0 0 10px 0 rgba(0,0,0,0.05)',
+                     transform: 'translateY(-1px)',
+                     '& .MuiTypography-root': {
+                       color: 'oklch(0.1 0.0 0)', // Change color of Typography on hover
+                     },
+                   },
+                 }}
+              >
+                <Typography variant="body2" sx={{                     
+                  fontSize: '13px',
+                    color: colors.primaryText,
+                    fontWeight: 500,
+                    fontFamily: "'Inter', sans-serif",
+                    lineHeight: 1.6,
+                     }}>
+                  {isActiveExpanded ? 'Close' : 'View all'}
+                </Typography>
+                {isActiveExpanded ? <CloseIcon sx={{ fontSize: '20px', color: COLORS.primaryText }} /> : <ExpandMoreIcon sx={{  color: COLORS.primaryText }} />}
+              </Box>
+          </Box>
+
+          {/* Collapsible cards section */}
+          <Collapse 
+            className="waitlist-active-cards-collapse"
+            in={isActiveExpanded} 
+            timeout={200} 
+            easing="ease-out" 
+            unmountOnExit
+          >
+            <Box 
+              className="waitlist-active-cards-container"
+              sx={{ 
+                display: 'flex',
+                flexDirection: 'row',
+                gap: 4,
+                py: 2,
+                px: { xs: 0, md: 0 },
+                width: '100%',
+                overflowX: 'auto',
+                overflowY: 'visible',
+                scrollbarWidth: 'none', // Firefox
+                '&::-webkit-scrollbar': {
+                  display: 'none', // Chrome, Safari, Edge
+                },
+              }}
+            >
+              {activeItems.map((item) => (
+                <Box
+                  key={item.id}
+                  className="waitlist-active-card-wrapper"
+                  sx={{
+                    flexShrink: 0,
+                    width: '320px',
+                  }}
+                >
+                  <WaitlistCard 
+                    item={item} 
+                    onRemove={onRemove}
+                    onEdit={handleEditClick}
+                    showActions="active"
+                  />
+                </Box>
+              ))}
+            </Box>
+          </Collapse>
+        </Box>
+        
+      
+      </Box>
+
+      {/* ===== SECOND HEADER: Total Tickets Listed ===== */}
+      <Box 
+        className="waitlist-listed-header-container"
+        sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between',
+
+        }}
+      >
+        {/* Main content area with title and collapsible cards */}
+        <Box
+          className="waitlist-listed-content"
+          sx={{ 
+            borderBottom: `1px solid ${colors.borderLight}`,
+            py: 1,
+            flex: 1,
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: { xs: 'center', md: 'flex-start' },
+            overflow: 'hidden'
+          }}
+        >
+          {/* Title row with "You've listed X tickets" */}
+          <Box 
+            className="waitlist-listed-title-row"
+            onClick={() => setIsListedExpanded(!isListedExpanded)}
+            sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'space-between',
+              width: '100%',
+              cursor: 'pointer',
+              transition: 'padding 200ms ease-out',
+              '&:hover': {
+                px: 1,
+                '& .confirmation-icon': {
+                  transform: 'rotate(21.5deg)',
+                }
+              }
+            }}
+          >
+            <Typography 
+              className="waitlist-listed-title"
+              variant="h5" 
+              component="h2" 
+              sx={{ 
+                fontWeight: 600,
+                fontSize: '24px',
+                color: colors.primaryText,
+                letterSpacing: '-.0325em',
+                lineHeight: '1.1',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                textTransform: 'capitalize'
+              }}
+            >
+              <ListIcon className="confirmation-icon" sx={{ fontSize: '24px', transition: 'transform 200ms ease-out' }} />
+              Listed Tickets
+              <Box 
+                className="waitlist-listed-count-badge"
+                sx={{ 
+                  backgroundColor: '#1976d2', // MUI primary blue
+                  color: 'white', 
+                  borderRadius: '100px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  fontSize: '18px',
+                  fontWeight: 500,
+                  lineHeight: 1,
+                  pr: 1.5,
+                  pl: 1.25,
+                  py: 1,
+                  aspectRatio: '1/1',
+                  height: '34px', // Fixed height
+                  width: '34px', // Fixed width
+                }}
+              >
+                1
+              </Box>
+            </Typography>
+
+            {/* Chevron button - positioned outside content to avoid collapse animation issues */}
+            <Box 
+              className="waitlist-listed-chevron"
+              sx={{ 
+                borderRadius: '16px',
+                border: `1px solid ${colors.borderLight}`,
+                backgroundColor: 'colors.background.paper',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '8px 7px 8px 12px',
+                  gap: 0.5,
+  
+                  transition: 'all 200ms ease-out',
+                  '&:hover': {
+                    backgroundColor: 'white',
+                    boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08), 0 0 10px 0 rgba(0,0,0,0.05)',
+                    transform: 'translateY(-1px)',
+                    '& .MuiTypography-root': {
+                      color: 'oklch(0.1 0.0 0)', // Change color of Typography on hover
+                    },
+                  },
+                }}
+            >
+              <Typography variant="body2" sx={{                     
+                fontSize: '13px',
+                  color: colors.primaryText,
+                  fontWeight: 500,
+                  fontFamily: "'Inter', sans-serif",
+                  lineHeight: 1.6,
+                   }}>
+                {isListedExpanded ? 'Close' : 'View all'}
+              </Typography>
+              {isListedExpanded ? <CloseIcon sx={{ fontSize: '20px', color: COLORS.primaryText }} /> : <ExpandMoreIcon sx={{ color: COLORS.primaryText }} />}
             </Box>
           </Box>
+
+          {/* Collapsible cards section */}
+          <Collapse 
+            className="waitlist-listed-cards-collapse"
+            in={isListedExpanded} 
+            timeout={200} 
+            easing="ease-out" 
+            unmountOnExit
+          >
+            <Box 
+              className="waitlist-listed-cards-container"
+              sx={{ 
+                display: 'flex',
+                flexDirection: 'row',
+                gap: 4,
+                py: 2,
+                px: { xs: 2, md: 3 },
+                width: '100%',
+                overflowX: 'auto',
+                overflowY: 'visible',
+                scrollbarWidth: 'none', // Firefox
+                '&::-webkit-scrollbar': {
+                  display: 'none', // Chrome, Safari, Edge
+                },
+              }}
+            >
+              {waitlistItems.slice(0, 1).map((item) => (
+                <Box
+                  key={item.id}
+                  className="waitlist-listed-card-wrapper"
+                  sx={{
+                    flexShrink: 0,
+                    width: '320px',
+                  }}
+                >
+                  <WaitlistCard 
+                    item={item} 
+                    onUnlist={onRemove}
+                    showActions="listed"
+                  />
+                </Box>
+              ))}
+            </Box>
+          </Collapse>
         </Box>
-        {isExpanded ? <ExpandLessIcon sx={{ color: '#4a5568' }} /> : <ExpandMoreIcon sx={{ color: '#4a5568' }} />}
+        
+    
       </Box>
 
       {/* Table Header - moved outside container */}
       <Collapse in={isExpanded} timeout={200} easing="ease-out" unmountOnExit>
         <Box className="waitlist-table-header" sx={{ 
-          display: 'grid',
+          display: 'none  ', /* hidden table  header for now, change to grid when visible */
           gridTemplateColumns: '2fr 1fr 1fr 1.2fr 1fr',
           alignItems: 'center',
           px: 3,
@@ -354,11 +669,12 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({
 
         {/* Table Container - matching Figma design */}
         <Box id="waitlist-table" className="waitlist-table-container" sx={{ 
+          display: 'none', /* hidden table for now, remove to make visible */
           backgroundColor: '#fafafa',
           borderRadius: '8px',
           overflow: 'hidden',
           border: '1px solid #e2e8f0',
-          boxShadow: '0px 1px 6px 0px rgba(0,0,0,0.05)'
+          boxShadow: '0px 1px 6px 0px rgba(0,0,0,0.05)',
         }}>
 
         {/* Active Items */}
@@ -456,8 +772,8 @@ const WaitlistSection: React.FC<WaitlistSectionProps> = ({
         </Box>
 
         {/* Disclaimer Text */}
-        <Box className="waitlist-disclaimer" sx={{ mx:1,mt:2, pt: 1 }}>
-          <Typography variant="body2" sx={{ lineHeight: '1.5', color: '#666666', fontSize: '0.8rem', mb: 1 }}>
+        <Box className="waitlist-disclaimer" sx={{ mx:0,mt:1.5, pt: 0 }}>
+          <Typography variant="body2" sx={{ lineHeight: '1.5', color: '#666666', fontSize: '0.8rem'}}>
             We will notify you via email if we are able to find tickets for you for the show.{' '}<br/>
             <Box component="span" sx={{ fontWeight: '600' }}>This is not a ticket. If we are able to find you tickets, your card will be charged the amount above.
             </Box>            

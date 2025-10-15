@@ -1,22 +1,40 @@
 import { createTheme } from '@mui/material/styles';
+import React from 'react';
 
 // Extend the theme type to include custom background colors
 declare module '@mui/material/styles' {
   interface TypeBackground {
     hover: string;
   }
+  
+  // Extend TypographyVariants to include custom variants
+  interface TypographyVariants {
+    sectionHeader: React.CSSProperties;
+  }
+  
+  // Extend TypographyVariantsOptions to include custom variants
+  interface TypographyVariantsOptions {
+    sectionHeader?: React.CSSProperties;
+  }
+}
+
+// Extend Typography component to include custom variant
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    sectionHeader: true;
+  }
 }
 
 // Color constants
 export const COLORS = {
-  primaryText: '#353535', // Main text color for headers and important content
-  borderLight: 'rgba(0,0,0,.15)',
+  primaryText: 'oklch(0.4 0.0 0)', // Main text color for headers and important content
+  borderLight: 'rgba(0,0,0,.1)',
   iconColor: 'rgba(0,0,0,.35)',
 } as const;
 // Color constants DARK THEME
 export const COLORS_DARK = {
-  primaryText: '#ffffff', // Main text color for headers and important content
-  borderLight: 'rgba(255,255,255,.15)',
+  primaryText: 'oklch(0.895 0.0093 106.58)', // Main text color for headers and important content
+  borderLight: 'rgba(255,255,255,.12)',
   iconColor: 'rgba(255,255,255,.35)',
 } as const;
 
@@ -37,8 +55,8 @@ export const lightTheme = createTheme({
       contrastText: '#ffffff',
     },
     background: {
-      default: '#E1E2E6', // Light gray background
-      paper: '#f8f9fa', // Light gray background
+      default: '#f8f8f8', // Light gray background
+      paper: '#ffffff', // Light gray background
       hover: '#ffffff', // Light gray hover background
     },
     text: {
@@ -109,6 +127,16 @@ export const lightTheme = createTheme({
       fontSize: '0.75rem',
       fontWeight: 400,
       lineHeight: 1.4,
+    },
+    // Custom variant for section headers
+    sectionHeader: {
+      fontFamily: '"IBM Plex Mono", "Courier New", monospace',
+      fontSize: '.75rem',
+      fontWeight: 600,
+      textTransform: 'uppercase',
+      letterSpacing: '0.2em', // 20% letter spacing
+      lineHeight: 1.1,
+      paddingLeft: '3px',
     },
   },
   shape: {
@@ -218,9 +246,9 @@ export const darkTheme = createTheme({
       contrastText: '#ffffff',
     },
     background: {
-      default: '#292929', // Dark background
-      paper: '#080808', // Darker paper background
-      hover: '#1e1e1e', // Darker hover background
+      default: '#000000', // Dark background
+      paper: '#1a1a1a', // Darker paper background
+      hover: '#ffffff', // Darker hover background
     },
     text: {
       primary: '#ffffff', // White text for dark mode
@@ -290,6 +318,15 @@ export const darkTheme = createTheme({
       fontSize: '0.75rem',
       fontWeight: 400,
       lineHeight: 1.4,
+    },
+    // Custom variant for section headers
+    sectionHeader: {
+      fontFamily: '"IBM Plex Mono", "Courier New", monospace',
+      fontSize: '12px',
+      fontWeight: 700,
+      textTransform: 'uppercase',
+      letterSpacing: '0.05em', // 5% letter spacing
+      lineHeight: 1.2,
     },
   },
   shape: {

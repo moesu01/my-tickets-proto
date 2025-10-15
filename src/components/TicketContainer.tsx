@@ -245,8 +245,12 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
       sx={{ 
         mb: 4,
         borderRadius: '16px',
-        py: 1,
-        px: { xs: 0, md: 2 },
+        border: `1px solid ${colors.borderLight}`,
+        boxShadow: '0px 4px 12px 0px rgba(0,0,0,.05), 0px 2px 4px 0px rgba(0,0,0,0.025)',
+
+        pt: 1,
+        pb: { xs: 2, md: 1 },
+        px: { xs: 1, md: 3 },
         backgroundColor: 'background.paper',
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
@@ -267,30 +271,24 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
           alignItems: { xs: 'center', md: 'flex-start' }, 
           justifyContent: 'space-between',
           mb: 0,
-          pt: 1,
-          pb: { xs: 0, md: 1 },
+          pt: 2,
+          pb: { xs: 0, md: 2 },
           minWidth: { xs: '100%', md: '280px' },
           width: { xs: '100%', md: 'auto' }
         }}
       >
         {/* KYD Summary Header */}
         <Typography 
-          variant="h6" 
+          variant="sectionHeader" 
           component="h1" 
           sx={{ 
-            fontWeight: 700,
-            fontSize: '12px',
             color: colors.primaryText,
-            textTransform: 'uppercase',
-            letterSpacing: '1%',
-            // width: '100%',
             pt: { xs: 0, md: 0 },
             mb: 0,
-            borderRadius: '10px',
             textAlign: { xs: 'center', md: 'left' }
           }}
         >
-          Your Tickets
+          YOUR TICKETS
         </Typography>
         
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -302,11 +300,11 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
               variant="h5" 
               component="h2" 
               sx={{ 
-                fontWeight: 700,
-                fontSize: '28px',
+                fontWeight: 600,
+                fontSize: '32px',
                 color: colors.primaryText,
-                letterSpacing: '-3%',
-                lineHeight: '1.2',
+                letterSpacing: '-.0325em',
+                lineHeight: '1.1',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 1,
@@ -315,17 +313,21 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
             >
               You've got 
               <Box sx={{ 
-                backgroundColor: '#E84B38', 
-                color: 'white', 
-                borderRadius: '50%', 
-                width: 32, 
-                height: 32, 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                fontSize: '22px',
-                fontWeight: 500,
-                lineHeight: 2,
+                   backgroundColor: '#17C964', // Positive green (MUI success.main or similar)
+                  color: 'white', 
+                  borderRadius: '100px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  fontSize: '22px',
+                  fontWeight: 500,
+                  lineHeight: 1,
+                  pr: 1.5,
+                  pl: 1.25,
+                  py: 1,
+                  aspectRatio: '1/1',
+                  height: '34px', // Fixed height
+                  width: '34px', // Fixed width
               }}>
                 {upcomingEventsCount}
               </Box>
@@ -334,11 +336,11 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
               variant="h5" 
               component="h2" 
               sx={{ 
-                fontWeight: 700,
-                fontSize: '28px',
+                fontWeight: 600,
+                fontSize: '32px',
                 color: colors.primaryText,
-                letterSpacing: '-3%',
-                lineHeight: '1.2',
+                letterSpacing: '-.0325em',
+                lineHeight: '1.1',
                 textTransform: 'capitalize'
               }}
             >
@@ -349,11 +351,12 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
               component="p" 
               sx={{ 
                 fontWeight: 400,
-                fontSize: '16px',
+                fontSize: '17px',
                 color: colors.primaryText,
-                letterSpacing: '-0.5px',
-                lineHeight: '20px',
-                mt: 0.5,
+                lineHeight: '1.25rem',
+                textTransform: 'capitalize',
+                letterSpacing: '-2%',
+                mt: 1,
               }}
             >
               {tickets.length === 1 

@@ -71,26 +71,28 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
 
   return (
     <Box sx={{ 
-      mb: 4,
+  mb: 4,
+      border: `1px solid ${colors.borderLight}`,
       borderRadius: '16px',
       py: 1,
       px: { xs: 0, md: 0 },
       backgroundColor: 'background.paper',
       display: 'flex',
       flexDirection: 'column',
-      gap: { xs: 1, md: 2 },
+      gap: { xs: 1, md: 1 },
       position: 'relative',
+      boxShadow: '0px 4px 12px 0px rgba(0,0,0,.05), 0px 2px 4px 0px rgba(0,0,0,0.025)',
     }}>
       {/* Section Header with Navigation */}
       <Box 
         sx={{ 
           display: 'flex', 
-          alignItems: { xs: 'center', md: 'flex-start' }, 
+          alignItems: { xs: 'center', md: 'center' }, 
           flexDirection: { xs: 'column', md: 'row' },
           justifyContent: 'space-between',
           mb: 0,
-          px: 2,
-          pt: 1,
+          px: 3,
+          pt: 2,
           gap: 2,
         }}
       >
@@ -105,17 +107,12 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
         >
           {/* Subhead */}
           <Typography 
-            variant="h6" 
+            variant="sectionHeader" 
             component="h1" 
             sx={{ 
-              fontWeight: 700,
-              fontSize: '12px',
               color: colors.primaryText,
-              textTransform: 'uppercase',
-              letterSpacing: '1%',
               pt: { xs: 0, md: 0 },
               mb: 0,
-              borderRadius: '10px',
               textAlign: 'left',
               ...transitions.A(isExpanded),
             }}
@@ -128,16 +125,19 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
             variant="h5" 
             component="h2" 
             sx={{ 
-              fontWeight: 700,
-              fontSize: '28px',
+              fontWeight: 600,
+              fontSize: '32px',
               color: colors.primaryText,
-              letterSpacing: '-3%',
-              lineHeight: '1.2',
+              letterSpacing: '-.0325em',
+              lineHeight: '1.1',
               textTransform: 'capitalize'
             }}
           >
             Recommended Events
           </Typography>
+
+        </Box>
+
 
           {/* Arrow Navigation Buttons */}
           <Box
@@ -153,12 +153,15 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
               sx={{
                 backgroundColor: 'background.paper',
                 color: 'theme.palette.text.primary',
-                border: '1px solid #ccc',
+                height: '100%',
+                aspectRatio: '1/1',
+                border: `1px solid #e2e8f0`,
+                borderRadius: '8px',
+                padding: '8px',
                 '&:hover': {
                   backgroundColor: 'background.default',
                 },
-                width: 32,
-                height: 32,
+
               }}
             >
               <ChevronLeft fontSize="small" />
@@ -169,20 +172,24 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
               sx={{
                 backgroundColor: 'background.paper',
                 color: 'theme.palette.text.primary',
-                border: '1px solid #ccc',
+                height: '100%',
+                aspectRatio: '1/1',
+                border: `1px solid #e2e8f0`,
+                borderRadius: '8px',
+                padding: '8px',
                 '&:hover': {
                   backgroundColor: 'background.default',
                 },
-                width: 32,
-                height: 32,
+
               }}
             >
               <ChevronRight fontSize="small" />
             </IconButton>
           </Box>
-        </Box>
+
 
         {/* Collapsible Chevron */}
+        {/* 
         <Box
           onClick={() => setIsExpanded(!isExpanded)}
           sx={{
@@ -224,6 +231,7 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
             }} />
           )}
         </Box>
+        */}
       </Box>
 
       {/* Events Container */}

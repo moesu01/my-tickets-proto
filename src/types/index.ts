@@ -20,7 +20,7 @@ export interface Ticket {
 export interface WaitlistItem {
   id: number;
   eventName: string;
-  status: 'ongoing' | 'cancelled' | 'expired';
+  status: 'ongoing' | 'cancelled' | 'expired' | 'filled';
   expirationDate: string;
   ticketId?: string;
   isClaimed?: boolean;
@@ -28,6 +28,10 @@ export interface WaitlistItem {
   ticketType: string;
   totalPrice: string;
   joinedOn: string;
+  venue: string;
+  date: string;
+  time: string;
+  eventImage?: string;
 }
 
 export interface Profile {
@@ -57,6 +61,9 @@ export interface WaitlistCardProps {
   item: WaitlistItem;
   onRemove?: (itemId: number) => void;
   onClaim?: (itemId: number) => void;
+  onEdit?: (itemId: number) => void;
+  onUnlist?: (itemId: number) => void;
+  showActions: 'active' | 'listed';
 }
 
 export interface PastEventRowProps {

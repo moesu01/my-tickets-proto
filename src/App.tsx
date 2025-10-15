@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import { CssBaseline, Container, Fab, Tooltip } from '@mui/material';
-import { LightMode, DarkMode } from '@mui/icons-material';
+import { CssBaseline, Container } from '@mui/material';
 import { lightTheme, darkTheme } from './theme';
 import Navbar from './components/Navbar';
 import TicketContainer from './components/TicketContainer';
@@ -10,6 +9,7 @@ import WaitlistSection from './components/WaitlistSection';
 import PastEventsSection from './components/PastEventsSection';
 import ProfileSection from './components/ProfileSection';
 import RecommendedEventsContainer from './components/RecommendedEventsContainer';
+import ThemeDataToggle from './components/ThemeDataToggle';
 import { getMockData } from './assets/mock-data';
 
 function App() {
@@ -88,16 +88,17 @@ function App() {
           onRemoveFromWaitlist={handleRemoveFromWaitlist}
         />
 
-        {/* Recommended Events Section */}
-        <RecommendedEventsContainer events={mockRecommendedEvents} isDarkMode={isDarkMode} />
-
         {/* Waitlist Section */}
         <WaitlistSection 
           waitlistItems={waitlistItems}
+          isDarkMode={isDarkMode}
           onRemove={(id: number) => console.log('Remove from waitlist:', id)}
           onClaim={(id: number) => console.log('Claim ticket:', id)}
           onUpdate={handleWaitlistUpdate}
         />
+
+        {/* Recommended Events Section */}
+        <RecommendedEventsContainer events={mockRecommendedEvents} isDarkMode={isDarkMode} />
 
         {/* Past Events Section */}
         <PastEventsSection 
@@ -115,47 +116,13 @@ function App() {
         />
       </Container>
 
-      {/* Theme Toggle Button */}
-      <Tooltip title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"} placement="left">
-        <Fab
-          color="primary"
-          size="small"
-          onClick={handleThemeToggle}
-          sx={{
-            position: 'fixed',
-            top: 16,
-            right: 80, // Position to the left of the data toggle button
-            zIndex: 1000,
-            backgroundColor: isDarkMode ? '#424242' : '#ffc107',
-            '&:hover': {
-              backgroundColor: isDarkMode ? '#616161' : '#ffb300',
-            },
-          }}
-        >
-          {isDarkMode ? <LightMode /> : <DarkMode />}
-        </Fab>
-      </Tooltip>
-
-      {/* Data Toggle Button */}
-      <Tooltip title={useMinimalData ? "Switch to Full Data" : "Switch to Minimal Data"} placement="left">
-        <Fab
-          color="primary"
-          size="small"
-          onClick={handleDataToggle}
-          sx={{
-            position: 'fixed',
-            top: 16,
-            right: 16,
-            zIndex: 1000,
-            backgroundColor: useMinimalData ? '#ff9800' : '#1976d2',
-            '&:hover': {
-              backgroundColor: useMinimalData ? '#f57c00' : '#1565c0',
-            },
-          }}
-        >
-          {useMinimalData ? '1' : '∞'}
-        </Fab>
-      </Tooltip>
+      {/* Theme and Data Toggle */}
+      <ThemeDataToggle
+        isDarkMode={isDarkMode}
+        useMinimalData={useMinimalData}
+        onThemeToggle={handleThemeToggle}
+        onDataToggle={handleDataToggle}
+      />
     </ThemeProvider>
   );
 }

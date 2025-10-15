@@ -12,6 +12,8 @@ import {
 import {
   OpenInNew as ExternalLinkIcon,
   List as ListIcon,
+  PlaylistAdd,
+  KeyboardDoubleArrowRight,
 } from '@mui/icons-material';
 import { TicketCardProps } from '../types';
 
@@ -530,7 +532,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
             <Typography
               sx={{
                 fontSize: '16px',
-                fontWeight: 900,
+                fontWeight: 700,
                 color: colors.primary,
                 fontFamily: "'Inter', sans-serif",
                 lineHeight: 1.2,
@@ -598,10 +600,10 @@ const TicketCard: React.FC<TicketCardProps> = ({
             <Typography
               sx={{
                 fontSize: '12px',
-                color: colors.secondary,
-                fontWeight: 400,
-                fontFamily: "'Inter', sans-serif",
-                letterSpacing: '-0.36px',
+                color: colors.primary,
+                fontWeight: 500,
+                fontFamily: "'ibm plex mono', sans-serif",
+                letterSpacing: '.05em',
                 lineHeight: 1,
               }}
             >
@@ -612,7 +614,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
                 sx={{
                   fontSize: '12px',
                   color: colors.primary,
-                  fontWeight: 900,
+                  fontWeight: 600,
                   fontFamily: "'Inter', sans-serif",
                   letterSpacing: '-0.36px',
                   lineHeight: 1,
@@ -624,7 +626,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
                 sx={{
                   fontSize: '12px',
                   color: colors.primary,
-                  fontWeight: 900,
+                  fontWeight: 600,
                   fontFamily: "'Inter', sans-serif",
                   letterSpacing: '-0.36px',
                   lineHeight: 1,
@@ -649,10 +651,10 @@ const TicketCard: React.FC<TicketCardProps> = ({
             <Typography
               sx={{
                 fontSize: '12px',
-                color: colors.secondary,
-                fontWeight: 400,
-                fontFamily: "'Inter', sans-serif",
-                letterSpacing: '-0.36px',
+                color: colors.primary,
+                fontWeight: 500,
+                fontFamily: "'ibm plex mono', sans-serif",
+                letterSpacing: '.05em',
                 lineHeight: 1,
               }}
             >
@@ -662,7 +664,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
               sx={{
                 fontSize: '12px',
                 color: colors.primary,
-                fontWeight: 900,
+                fontWeight: 600,
                 fontFamily: "'Inter', sans-serif",
                 letterSpacing: '-0.36px',
                 lineHeight: 1,
@@ -703,10 +705,10 @@ const TicketCard: React.FC<TicketCardProps> = ({
               <Typography
                 sx={{
                   fontSize: '12px',
-                  color: colors.secondary,
-                  fontWeight: 400,
-                  fontFamily: "'Inter', sans-serif",
-                  letterSpacing: '-0.36px',
+                  color: colors.primary,
+                  fontWeight: 500,
+                  fontFamily: "'ibm plex mono', sans-serif",
+                  letterSpacing: '.05em',
                   lineHeight: 1,
                   mb: 0.5,
                 }}
@@ -717,7 +719,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
                 sx={{
                   fontSize: '13px',
                   color: colors.primary,
-                  fontWeight: 900,
+                  fontWeight: 600,
                   fontFamily: "'Inter', sans-serif",
                   letterSpacing: '-3%',
                   lineHeight: 1.3,
@@ -732,7 +734,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
                         {formatted.relativeTime}
                       </span>
                       <br />
-                      <span style={{ fontWeight: 900, textTransform: 'uppercase' }}>
+                      <span style={{ fontWeight: 600, textTransform: 'uppercase' }}>
                         {formatted.actualDayOfWeek} • {formatted.month} {formatted.day}
                       </span>
                     </>
@@ -746,11 +748,11 @@ const TicketCard: React.FC<TicketCardProps> = ({
               <Typography
                 sx={{
                   fontSize: '12px',
-                  color: colors.secondary,
-                  fontWeight: 400,
-                  fontFamily: "'Inter', sans-serif",
-                  letterSpacing: '-0.36px',
-                  lineHeight: 1.2,
+                  color: colors.primary,
+                  fontWeight: 500,
+                  fontFamily: "'ibm plex mono', sans-serif",
+                  letterSpacing: '.05em',
+                  lineHeight: 1,
                   mb: 0.5,
                 }}
               >
@@ -760,7 +762,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
                 sx={{
                   fontSize: '13px',
                   color: colors.primary,
-                  fontWeight: 900,
+                  fontWeight: 600,
                   fontFamily: "'Inter', sans-serif",
                   letterSpacing: '-0.36px',
                   lineHeight: 1,
@@ -777,7 +779,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
                 sx={{
                   fontSize: '13px',
                   color: colors.primary,
-                  fontWeight: 900,
+                  fontWeight: 600,
                   fontFamily: "'Inter', sans-serif",
                   letterSpacing: '-0.36px',
                   lineHeight: 1.2,
@@ -835,7 +837,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
                 <Typography
                   sx={{
                     fontSize: '12px',
-                    fontWeight: 500,
+                    fontWeight: 600,
                     color: colors.primary,
                     fontFamily: "'Inter', sans-serif",
                     textAlign: 'center',
@@ -983,19 +985,14 @@ const TicketCard: React.FC<TicketCardProps> = ({
               >
                 Transfer ticket
               </Typography>
-              <Box sx={{ width: 18, height: 18 }}>
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 18 18"
-                  fill="none"
-                >
-                  <path
-                    d={transferSvgPaths.p32940e00}
-                    fill="black"
-                    fillOpacity="0.39"
-                  />
-                </svg>
+              <Box sx={{ width: 20, height: 20 }}>
+                <KeyboardDoubleArrowRight 
+                  sx={{ 
+                    width: 20, 
+                    height: 20, 
+                    color: 'rgba(0, 0, 0, 0.39)' 
+                  }} 
+                />
               </Box>
             </Box>
 
@@ -1029,19 +1026,14 @@ const TicketCard: React.FC<TicketCardProps> = ({
               >
                 List my ticket
               </Typography>
-              <Box sx={{ width: 18, height: 18 }}>
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 18 18"
-                  fill="none"
-                >
-                  <path
-                    d={transferSvgPaths.p3d41b300}
-                    fill="black"
-                    fillOpacity="0.39"
-                  />
-                </svg>
+              <Box sx={{ width: 20, height: 20 }}>
+                <PlaylistAdd 
+                  sx={{ 
+                    width:20, 
+                    height: 20, 
+                    color: 'rgba(0, 0, 0, 0.39)' 
+                  }} 
+                />
               </Box>
             </Box>
           </>
