@@ -227,7 +227,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
         alignItems: 'stretch',
         justifyContent: 'space-between',
         position: 'relative',
-        width: '240px',
+        width: '260px',
         height: '100%',
         boxSizing: 'border-box',
         boxShadow: `inset 0 0 0 1px ${colors.subtle}, 0px 0px 20px ${colors.vsubtle}`,
@@ -265,8 +265,8 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
           flexDirection: 'column',
           gap: 0,
           alignItems: 'flex-start',
-          p:1.5,
-          pb:1,
+          p:2,
+          pb:1.5,
           flexShrink: 0,
           width: '100%',
           
@@ -325,10 +325,10 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
             <Typography
               sx={{
                 fontSize: '12px',
-                color: colors.secondary,
+                color: colors.primary,
                 fontWeight: 500,
                 fontFamily: "'ibm plex mono', sans-serif",
-                letterSpacing: '.05em',
+                letterSpacing: '.02em',
                 lineHeight: 1,
               }}
             >
@@ -337,8 +337,8 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
             <Typography
               sx={{
                 fontSize: '12px',
-                color: colors.secondary,
-                fontWeight: 900,
+                color: colors.primary,
+                fontWeight: 600,
                 fontFamily: "'Inter', sans-serif",
                 letterSpacing: '-0.36px',
                 lineHeight: 1,
@@ -362,10 +362,10 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
             <Typography
               sx={{
                 fontSize: '12px',
-                color: colors.secondary,
+                color: colors.primary,
                 fontWeight: 500,
                 fontFamily: "'ibm plex mono', sans-serif",
-                letterSpacing: '.05em',
+                letterSpacing: '.02em',
                 lineHeight: 1,
               }}
             >
@@ -374,8 +374,8 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
             <Typography
               sx={{
                 fontSize: '12px',
-                color: colors.secondary,
-                fontWeight: 900,
+                color: colors.primary,
+                fontWeight: 600,
                 fontFamily: "'Inter', sans-serif",
                 letterSpacing: '-0.36px',
                 lineHeight: 1,
@@ -397,7 +397,6 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
           flexDirection: 'column',
           flexShrink: 0,
           width: '100%',
-          borderRadius: '16px',
           // mb:'-5px', /* because of weird extra gap at bottom of container */
         }}
       >
@@ -421,23 +420,21 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
             src={event.image}
             alt={event.title}
             style={{
-              position: 'absolute',
-              inset: 0,
+             
               maxWidth: 'none',
               objectFit: 'cover',
-              objectPosition: '50% 50%',
               pointerEvents: 'none',
               width: '100%',
               height: '100%',
-                          // CSS mask for fade effect at bottom
-            maskImage: 'linear-gradient(to bottom, black 0%, black 65%, transparent 98%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 65%, transparent 98%)',
-            maskSize: '100% 100%',
-            WebkitMaskSize: '100% 100%',
-            maskPosition: 'center',
-            WebkitMaskPosition: 'center',
-            maskRepeat: 'no-repeat',
-            WebkitMaskRepeat: 'no-repeat',
+              // CSS mask for fade effect at bottom
+              maskImage: 'linear-gradient(to bottom, black 0%, black 65%, transparent 98%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 65%, transparent 98%)',
+              maskSize: '100% 100%',
+              WebkitMaskSize: '100% 100%',
+              maskPosition: 'center',
+              WebkitMaskPosition: 'center',
+              maskRepeat: 'no-repeat',
+              WebkitMaskRepeat: 'no-repeat',
             }}
           />
         </Box>
@@ -450,8 +447,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
             backgroundColor: colors.base,
             p: 2,
             pt:1,
-            borderBottomLeftRadius: '16px',
-            borderBottomRightRadius: '16px',
+
           }}
         >
           <Box

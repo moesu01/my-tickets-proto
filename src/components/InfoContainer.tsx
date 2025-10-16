@@ -38,15 +38,16 @@ const InfoContainer: React.FC<InfoContainerProps> = ({
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: 1.5,
-        fontSize: '14px',
-        color: colors.primaryText,
-        fontWeight: 500,
-        border: `1px solid ${colors.borderLight}`,
+        backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,.15)' : theme.palette.background.paper,
+        border: (theme) => theme.palette.mode === 'dark' ? `1px solid rgba(255,255,255,.05)` : `1px solid ${colors.borderLight}`,
+        boxShadow: '0px 4px 12px 0px rgba(0,0,0,.05), 0px 2px 4px 0px rgba(0,0,0,0.025)',
         p: 1.5,
         mb: 0,
-        borderRadius: '8px',
+        borderRadius: '16px',
         cursor: 'pointer',
         width: '100%',
+        maxWidth: { xs: '300px', md: 'none' },
+        mx: { xs: 'auto', md: '0' },
         position: 'relative',
         transition: 'all 200ms ease-out',
         willChange: 'transform, opacity, background-color, box-shadow',
@@ -59,19 +60,9 @@ const InfoContainer: React.FC<InfoContainerProps> = ({
         },
           '&:hover': {
             opacity: 1,
-      
-          // Right icon hover effects triggered by container hover
-          '& .right-icon-container': {
-            backgroundColor: 'background.hover',
+            transform: 'translateY(-2px)',
             
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-
-            '& .right-icon': {
-              color: '#1976d2', // Blue color
-              filter: 'drop-shadow(0 2px 6px rgba(25, 118, 210, .15))', // Blue glow effect on SVG paths
-
-            }
-          }
+      
         }
       }}
     >
@@ -83,6 +74,7 @@ const InfoContainer: React.FC<InfoContainerProps> = ({
             color: colors.iconColor 
           }} 
         /> */}
+      
         <Box>
           <Typography 
             sx={{ 
@@ -100,7 +92,7 @@ const InfoContainer: React.FC<InfoContainerProps> = ({
               fontWeight: 400,
               color: colors.primaryText,
               lineHeight: '1.25rem',
-              textTransform: 'capitalize'
+              textTransform: 'none'
             }}
           >
             {subtitle}
@@ -114,10 +106,16 @@ const InfoContainer: React.FC<InfoContainerProps> = ({
           alignItems: 'center',
           justifyContent: 'center',
           height: '100%',
-          aspectRatio: '1/1',
-          border: `1px solid ${colors.borderLight}`,
+        
+        //   border: `1px solid ${colors.borderLight}`,
+        //   backgroundColor: 'background.paper',
+        //   boxShadow: (theme) =>
+        //     theme.palette.mode === 'dark'
+        //       ? '0px 4px 12px 0px rgba(255,255,255,0.15)'
+        //       : '0px 4px 12px 0px rgba(0,0,0,.05), 0px 2px 4px 0px rgba(0,0,0,0.025)',
+
           borderRadius: '8px',
-          padding: '8px',
+          paddingTop: '2px',
           transition: 'all 200ms ease-out',
           willChange: 'transform, background-color, box-shadow',
         }}
@@ -125,13 +123,16 @@ const InfoContainer: React.FC<InfoContainerProps> = ({
         <RightIcon 
           className="right-icon"
           sx={{ 
-            fontSize: '24px', 
-            color: colors.iconColor,
+            fontSize: '34px', 
+            color:(theme) => theme.palette.mode === 'dark'
+              ? 'rgba(255,255,255,0.35)'
+              : 'rgba(0,0,0,0.25)',
             transition: 'all 200ms ease-out',
             willChange: 'color, filter'
           }} 
         />
       </Box>
+
     </Box>
   );
 };

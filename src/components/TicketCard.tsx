@@ -454,6 +454,8 @@ const TicketCard: React.FC<TicketCardProps> = ({
       sx={{
         width: '350px',
         maxWidth: { xs: '300px', md: '350px' },
+        height: '100%',
+        
         flexShrink: 0,
         borderRadius: '16px',
         overflow: 'visible',
@@ -473,6 +475,8 @@ const TicketCard: React.FC<TicketCardProps> = ({
           ...dropShadowStyle,
           overflow: 'hidden',
           position: 'relative',
+          flex: 1, // Grow to fill available space
+
           // Background image and blur applied via pseudo-element
           ...(ticket.eventImage && {
             '&::before': {
@@ -511,9 +515,12 @@ const TicketCard: React.FC<TicketCardProps> = ({
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center',
+            alignItems: 'stretch',
             mb: 1.5,
             gap:1,
+
+            flex: 1, // Grow to fill available space
+
           }}
         >
           <Box className="title-content" sx={{ flex: 1 }}>

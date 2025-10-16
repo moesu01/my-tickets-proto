@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Box, IconButton, Typography, Collapse } from '@mui/material';
 import { ChevronLeft, ChevronRight, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import EventCard from './EventCard';
+import NavigationButtons from './NavigationButtons';
+import CarouselIndicators from './CarouselIndicators';
 import { RecommendedEventsContainerProps } from '../types';
 import { COLORS, COLORS_DARK } from '../theme';
 import { transitions } from '../utils/transitions';
@@ -12,10 +14,39 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
 }) => {
   const eventsContainerRef = useRef<HTMLDivElement>(null);
   const [isExpanded, setIsExpanded] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   // Use appropriate color constants based on theme mode
   const colors = isDarkMode ? COLORS_DARK : COLORS;
 
+  // Track active carousel index based on scroll position
+  useEffect(() => {
+    const container = eventsContainerRef.current;
+    if (!container) return;
+
+    const updateActiveIndex = () => {
+      const children = Array.from(container.children) as HTMLElement[];
+      if (!children.length) return;
+
+      // Dynamically calculate gap based on screen size
+      const isMobile = window.innerWidth < 900; // md breakpoint
+      const gap = isMobile ? 32 : 48; // gap: 4 (32px) on mobile, gap: 8 (48px) on desktop
+      
+      const cardWidth = children[0].offsetWidth || 260;
+      const snapDistance = cardWidth + gap;
+      const currentIndex = Math.round(container.scrollLeft / snapDistance);
+      
+      setActiveIndex(Math.max(0, Math.min(children.length - 1, currentIndex)));
+    };
+
+    container.addEventListener('scroll', updateActiveIndex);
+    // Initial calculation
+    updateActiveIndex();
+
+    return () => {
+      container.removeEventListener('scroll', updateActiveIndex);
+    };
+  }, [events.length]);
 
   const scrollToNext = () => {
     const container = eventsContainerRef.current;
@@ -28,7 +59,7 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
     const isMobile = window.innerWidth < 900; // md breakpoint
     const gap = isMobile ? 32 : 48; // gap: 4 (32px) on mobile, gap: 8 (48px) on desktop
     
-    const cardWidth = children[0].offsetWidth || 240;
+    const cardWidth = children[0].offsetWidth || 260;
     const snapDistance = cardWidth + gap;
     const currentIndex = Math.round(container.scrollLeft / snapDistance);
 
@@ -52,7 +83,7 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
     const isMobile = window.innerWidth < 900; // md breakpoint
     const gap = isMobile ? 32 : 48; // gap: 4 (32px) on mobile, gap: 8 (48px) on desktop
     
-    const cardWidth = children[0].offsetWidth || 240;
+    const cardWidth = children[0].offsetWidth || 260;
     const snapDistance = cardWidth + gap;
     const currentIndex = Math.round(container.scrollLeft / snapDistance);
 
@@ -130,7 +161,8 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
               color: colors.primaryText,
               letterSpacing: '-.0325em',
               lineHeight: '1.1',
-              textTransform: 'capitalize'
+              textTransform: 'capitalize',
+              textAlign: { xs: 'center', md: 'left' }
             }}
           >
             Recommended Events
@@ -140,98 +172,37 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
 
 
           {/* Arrow Navigation Buttons */}
-          <Box
+          <NavigationButtons
+            onPrevious={scrollToPrevious}
+            onNext={scrollToNext}
+            colors={colors}
+            size="large"
             sx={{
-              display: 'flex',
-              gap: 1,
               ...transitions.A(isExpanded),
+              overflow: 'visible',
+              display: { xs: 'none', md: 'flex' },
             }}
-          >
-            <IconButton
-              onClick={scrollToPrevious}
-              size="small"
-              sx={{
-                backgroundColor: 'background.paper',
-                color: 'theme.palette.text.primary',
-                height: '100%',
-                aspectRatio: '1/1',
-                border: `1px solid #e2e8f0`,
-                borderRadius: '8px',
-                padding: '8px',
-                '&:hover': {
-                  backgroundColor: 'background.default',
-                },
-
-              }}
-            >
-              <ChevronLeft fontSize="small" />
-            </IconButton>
-            <IconButton
-              onClick={scrollToNext}
-              size="small"
-              sx={{
-                backgroundColor: 'background.paper',
-                color: 'theme.palette.text.primary',
-                height: '100%',
-                aspectRatio: '1/1',
-                border: `1px solid #e2e8f0`,
-                borderRadius: '8px',
-                padding: '8px',
-                '&:hover': {
-                  backgroundColor: 'background.default',
-                },
-
-              }}
-            >
-              <ChevronRight fontSize="small" />
-            </IconButton>
-          </Box>
+          />
 
 
-        {/* Collapsible Chevron */}
-        {/* 
-        <Box
-          onClick={() => setIsExpanded(!isExpanded)}
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%',
-            aspectRatio: '1/1',
-            border: `1px solid #e2e8f0`,
-            borderRadius: '8px',
-            padding: '8px',
-            cursor: 'pointer',
-            transition: 'all 0.15s ease-out',
-            willChange: 'transform, background-color, box-shadow',
-            '&:hover': {
-              backgroundColor: 'background.hover',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-              borderColor: 'transparent',
-              '& .MuiSvgIcon-root': {
-                color: '#1976d2', // Blue color
-                filter: 'drop-shadow(0 2px 6px rgba(25, 118, 210, .5))', // Blue glow effect on SVG paths
-              }
-            }
-          }}
-        >
-          {isExpanded ? (
-            <KeyboardArrowUp sx={{ 
-              fontSize: '24px', 
-              color: colors.primaryText,
-              transition: 'all 0.15s ease-out',
-              willChange: 'color, filter'
-            }} />
-          ) : (
-            <KeyboardArrowDown sx={{ 
-              fontSize: '24px', 
-              color: colors.primaryText,
-              transition: 'all 0.15s ease-out',
-              willChange: 'color, filter'
-            }} />
-          )}
-        </Box>
-        */}
+      </Box>
+
+      {/* Carousel Indicators Container */}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          py: 1,
+        }}
+      >
+        <CarouselIndicators
+          itemCount={events.length}
+          activeIndex={activeIndex}
+          containerRef={eventsContainerRef}
+          colors={colors}
+          display={{ xs: 'flex', md: 'flex' }}
+        />
       </Box>
 
       {/* Events Container */}
@@ -243,7 +214,8 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
           sx={{ 
             display: 'flex', // Show on all screen sizes
             gap: { xs: 4, md: 6 }, // Smaller gap on mobile (32px), larger on desktop (48px)
-            py: 2,
+            pt: { xs: 0, md: 2 },
+            pb: { xs: 2, md: 2 },
             px: { xs: 4, md: 6 }, // Padding for mobile and desktop
             // Extend container width so CSS mask fades outside visible area
             width: '100%',

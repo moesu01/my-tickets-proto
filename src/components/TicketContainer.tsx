@@ -3,6 +3,8 @@ import { Box, IconButton, Typography, Link } from '@mui/material';
 import { ChevronLeft, ChevronRight, CurrencyExchangeOutlined, TimerOutlined, KeyboardArrowDown, LocationOn, NearMe } from '@mui/icons-material';
 import TicketCard from './TicketCard';
 import InfoContainer from './InfoContainer';
+import NavigationButtons from './NavigationButtons';
+import CarouselIndicators from './CarouselIndicators';
 import { Ticket, WaitlistItem } from '../types';
 import { COLORS, COLORS_DARK } from '../theme';
 
@@ -244,19 +246,18 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
       className="ticket-container-main"
       sx={{ 
         mb: 4,
-        borderRadius: '16px',
-        border: `1px solid ${colors.borderLight}`,
-        boxShadow: '0px 4px 12px 0px rgba(0,0,0,.05), 0px 2px 4px 0px rgba(0,0,0,0.025)',
-
+        // backgroundColor: 'background.paper',
+        // borderRadius: '16px',
+        // border: `1px solid ${colors.borderLight}`,
+        // boxShadow: '0px 4px 12px 0px rgba(0,0,0,.05), 0px 2px 4px 0px rgba(0,0,0,0.025)',
         pt: 1,
         pb: { xs: 2, md: 1 },
-        px: { xs: 1, md: 3 },
-        backgroundColor: 'background.paper',
+        px: { xs: 0, md: 0 },
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
         gap: { xs: 1, md: 2 },
         position: 'relative',
-        maxWidth: tickets.length === 1 ? '800px' : 'none',
+        maxWidth: tickets.length === 1 ? '720px' : 'none',
         mx: tickets.length === 1 ? 'auto' : '0',
       }}
     >
@@ -266,10 +267,10 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
         className="upcoming-events-header-top"
         sx={{ 
           display: 'flex', 
-          gap: 2,
+          gap: { xs: 2, md: 6 }, 
           flexDirection: 'column',
-          alignItems: { xs: 'center', md: 'flex-start' }, 
-          justifyContent: 'space-between',
+          alignItems: { xs: 'center', md: 'center' }, 
+          justifyContent: { xs: 'center', md: 'center' }, 
           mb: 0,
           pt: 2,
           pb: { xs: 0, md: 2 },
@@ -294,7 +295,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
           <Box 
             className="events-count-content"
-            sx={{ display: 'flex', flexDirection: 'column', alignItems: { xs: 'center', md: 'flex-start' } }}
+            sx={{ display: 'flex', flexDirection: 'column', alignItems: { xs: 'center', md: 'center' } }}
           >
             <Typography 
               variant="h5" 
@@ -367,78 +368,32 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
             
         
           </Box>
-          {/* <Box sx={{ 
-            backgroundColor: colors.primaryText, 
-            color: 'white', 
-            borderRadius: '50%', 
-            width: 26, 
-            height: 26, 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            fontSize: '16px',
-            fontWeight: 500,
-            ml: 0.5
-          }}>
-            {tickets.length}
-          </Box> */}
           
         </Box>
         
         {/* Arrow Navigation Buttons - Only show if there are multiple tickets */}
         {tickets.length > 1 && (
-          <Box
-            className="ticket-container-arrow-navigation"
+          <NavigationButtons
+            onPrevious={scrollToPrevious}
+            onNext={scrollToNext}
+            canScrollLeft={canScrollLeft}
+            canScrollRight={canScrollRight}
+            colors={colors}
+            size="large"
             sx={{
-              display: 'flex',
-              gap: 1,
-              zIndex: 1,
+           display: { xs: 'none', md: 'flex' },
             }}
-          >
-            <IconButton
-              onClick={scrollToPrevious}
-              disabled={!canScrollLeft}
-              size="small"
-              sx={{
-                backgroundColor: 'background.paper',
-                color: 'theme.palette.text.primary',
-                border: '1px solid #ccc',
-                '&:hover': {
-                  backgroundColor: 'background.default',
-                },
-                '&:disabled': {
-                  backgroundColor: 'transparent',
-                  color: 'theme.palette.text.secondary',
-                },
-                width: 32,
-                height: 32,
-              }}
-            >
-              <ChevronLeft fontSize="small" />
-            </IconButton>
-            <IconButton
-              onClick={scrollToNext}
-              disabled={!canScrollRight}
-              size="small"
-              sx={{
-                backgroundColor: 'background.paper',
-                color: 'theme.palette.text.primary',
-                border: '1px solid #ccc',
-                '&:hover': {
-                  backgroundColor: 'background.default',
-                },
-                '&:disabled': {
-                  backgroundColor: 'transparent',
-                  color: 'theme.palette.text.secondary',
-                },
-                width: 32,
-                height: 32,
-              }}
-            >
-              <ChevronRight fontSize="small" />
-            </IconButton>
-          </Box>
+          />
         )}
+
+        {/* Carousel Indicators - Only show if there are multiple tickets */}
+        <CarouselIndicators
+          itemCount={tickets.length}
+          activeIndex={activeTicketIndex}
+          containerRef={ticketsContainerRef}
+          colors={colors}
+          display={{ xs: 'flex', md: 'flex' }}
+        />
         
         {/* Summary Stats List - Desktop Only */}
         {waitlistItems.length > 0 && (
@@ -450,6 +405,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
               margin: 0,
               mt: 2,
               width: '100%',
+              maxWidth: '90%',
               display: { xs: 'none', md: 'block' }, // Only show on desktop
             }}
           >
@@ -494,7 +450,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
         className="upcoming-events-tickets-container"
         sx={{ 
           display: 'flex', // Show on all screen sizes
-          alignItems: 'center', 
+          alignItems: 'stretch', // Make all cards stretch to same height
           gap: { xs: 2, md: 4 }, // Smaller gap on mobile (16px), larger on desktop (24px)
           py: 2,
           pl: { xs: tickets.length === 1 ? 0 : 4, md: 1.65 }, // Conditional padding: 0 for single ticket (centered), 4 for multiple tickets (scroll snap)
@@ -545,6 +501,8 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
             // Smooth transition between mask states
             transition: 'mask-image 0.2s ease-out, -webkit-mask-image 0.2s ease-out',
           }),
+          // Add relative positioning for absolute positioned indicators
+          position: 'relative',
         }}
       >
         {tickets.map((ticket, index) => (
@@ -584,6 +542,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
             }}
           />
         )}
+
       </Box>
 
       {/* Mobile Additional Info Section - Venue or Waitlist */}
@@ -592,9 +551,9 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
           id="upcoming-events-header-bottom"
           className="upcoming-events-header-bottom"
           sx={{ 
-            display: { xs: 'block', md: 'none' }, // Only show on mobile
+            display: { xs: 'none', md: 'none' }, // Only show on mobile
             width: '100%',
-            pt: 0,
+            pt: 2.5,
             pb: 1,
             px: 2,
           }}
@@ -606,7 +565,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
               listStyle: 'none',
               padding: 0,
               margin: 0,
-              mt: 2,
+              mt: 0,
               width: '100%'
             }}
           >
@@ -615,7 +574,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
               <InfoContainer
                 leftIcon={LocationOn}
                 title={tickets[0].venue}
-                subtitle={tickets[0].location}
+                subtitle='Get directions to venue'
                 rightIcon={NearMe}
                 onClick={() => {
                   // Open maps with venue address

@@ -134,7 +134,7 @@ export const lightTheme = createTheme({
       fontSize: '.75rem',
       fontWeight: 600,
       textTransform: 'uppercase',
-      letterSpacing: '0.2em', // 20% letter spacing
+      letterSpacing: '0.20em', // 20% letter spacing
       lineHeight: 1.1,
       paddingLeft: '3px',
     },
@@ -325,7 +325,7 @@ export const darkTheme = createTheme({
       fontSize: '12px',
       fontWeight: 700,
       textTransform: 'uppercase',
-      letterSpacing: '0.05em', // 5% letter spacing
+      letterSpacing: '0.20em', // 20% letter spacing - consistent with light theme
       lineHeight: 1.2,
     },
   },
