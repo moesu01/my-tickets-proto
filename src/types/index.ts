@@ -1,21 +1,30 @@
 // TypeScript types for My Tickets application
 
+export interface TicketType {
+  ticketType: string;
+  totalPrice?: string;
+  admitCount: number;
+  ticketId: string;
+  qrCode: string;
+}
+
 export interface Ticket {
   id: number;
   eventName: string;
   eventSeries: string;
   venue: string;
   location: string;
-  ticketType: string;
+  ticketType: string; // Keep for backward compatibility
   date: string;
   time: string;
-  admitCount: number;
-  ticketId: string;
-  qrCode: string;
+  admitCount: number; // Keep for backward compatibility
+  ticketId: string; // Keep for backward compatibility
+  qrCode: string; // Keep for backward compatibility
   eventImage: string;
   theme: string;
   status: 'upcoming' | 'past' | 'cancelled' | 'refunded' | 'transferred' | 'waitlisted';
-  totalPrice?: string;
+  totalPrice?: string; // Keep for backward compatibility
+  tickets?: TicketType[]; // New property for multiple tickets
 }
 
 export interface WaitlistItem {

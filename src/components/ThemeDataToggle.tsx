@@ -4,17 +4,32 @@ import { DarkMode, LightMode } from '@mui/icons-material';
 
 interface ThemeDataToggleProps {
   isDarkMode: boolean;
-  useMinimalData: boolean;
+  dataMode: 'full' | 'minimal' | 'empty';
   onThemeToggle: () => void;
   onDataToggle: () => void;
 }
 
 const ThemeDataToggle: React.FC<ThemeDataToggleProps> = ({
   isDarkMode,
-  useMinimalData,
+  dataMode,
   onThemeToggle,
   onDataToggle,
 }) => {
+  // Get display text and tooltip based on data mode
+  const getDataModeDisplay = () => {
+    switch (dataMode) {
+      case 'full':
+        return { text: '∞', tooltip: 'Switch to Minimal Data' };
+      case 'minimal':
+        return { text: '1', tooltip: 'Switch to Empty Data' };
+      case 'empty':
+        return { text: '0', tooltip: 'Switch to Full Data' };
+      default:
+        return { text: '∞', tooltip: 'Switch to Minimal Data' };
+    }
+  };
+
+  const dataModeDisplay = getDataModeDisplay();
   return (
     <Box
       sx={{
@@ -56,27 +71,27 @@ const ThemeDataToggle: React.FC<ThemeDataToggleProps> = ({
       </Tooltip>
 
       {/* Data Toggle */}
-      <Tooltip title={useMinimalData ? "Switch to Full Data" : "Switch to Minimal Data"} placement="left">
+      <Tooltip title={dataModeDisplay.tooltip} placement="left">
         <IconButton
           onClick={onDataToggle}
           sx={{
             width: 40,
             height: 40,
             borderRadius: '20px',
-            backgroundColor: useMinimalData ? 'rgba(255, 255, 255, 0.9)' : 'transparent',
-            border: useMinimalData ? '1px solid rgba(0, 0, 0, 0.1)' : 'none',
-            boxShadow: useMinimalData ? '0px 2px 8px rgba(0, 0, 0, 0.1)' : 'none',
+            backgroundColor: dataMode !== 'full' ? 'rgba(255, 255, 255, 0.9)' : 'transparent',
+            border: dataMode !== 'full' ? '1px solid rgba(0, 0, 0, 0.1)' : 'none',
+            boxShadow: dataMode !== 'full' ? '0px 2px 8px rgba(0, 0, 0, 0.1)' : 'none',
             color: 'text.secondary',
             fontSize: '18px',
             fontWeight: 600,
             '&:hover': {
-              backgroundColor: useMinimalData ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 0.05)',
-              boxShadow: useMinimalData ? '0px 4px 12px rgba(0, 0, 0, 0.15)' : 'none',
+              backgroundColor: dataMode !== 'full' ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 0.05)',
+              boxShadow: dataMode !== 'full' ? '0px 4px 12px rgba(0, 0, 0, 0.15)' : 'none',
             },
             transition: 'all 0.2s ease-in-out',
           }}
         >
-          {useMinimalData ? '1' : '∞'}
+          {dataModeDisplay.text}
         </IconButton>
       </Tooltip>
     </Box>

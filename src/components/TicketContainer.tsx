@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Box, IconButton, Typography, Link } from '@mui/material';
+import { Box, IconButton, Typography, Link, Button } from '@mui/material';
 import { ChevronLeft, ChevronRight, CurrencyExchangeOutlined, TimerOutlined, KeyboardArrowDown, LocationOn, NearMe } from '@mui/icons-material';
 import TicketCard from './TicketCard';
 import InfoContainer from './InfoContainer';
@@ -252,6 +252,110 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
       inline: 'center',
     });
   };
+
+  // Handle empty state
+  if (tickets.length === 0) {
+    return (
+      <Box 
+        className="ticket-container-main"
+        sx={{ 
+          mb: 4,
+          pt: 1,
+          pb: 2,
+          px: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1,
+          position: 'relative',
+          // Page load transition
+          opacity: isPageLoaded ? 1 : 0,
+          transform: isPageLoaded ? 'translateY(0)' : 'translateY(20px)',
+          transition: 'opacity 0.6s ease-out, transform 0.6s ease-out',
+        }}
+      >
+        {/* Empty State Header */}
+        <Box 
+          id="upcoming-events-header-top"
+          className="upcoming-events-header-top"
+          sx={{ 
+            display: 'flex', 
+            gap: 2,
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            mb: 0,
+            pt: 2,
+            pb: 0,
+            minWidth: '100%',
+            width: '100%'
+          }}
+        >
+          {/* KYD Summary Header */}
+          <Typography 
+            variant="sectionHeader" 
+            component="h1" 
+            sx={{ 
+              color: colors.primaryText,
+              pt: 0,
+              mb: 0,
+              textAlign: 'center'
+            }}
+          >
+            YOUR TICKETS
+          </Typography>
+          
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Box 
+              className="events-count-content"
+              sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+            >
+              <Typography 
+                variant="h5" 
+                component="h2" 
+                sx={{ 
+                  fontWeight: 600,
+                  fontSize: '32px',
+                  color: colors.primaryText,
+                  letterSpacing: '-.0325em',
+                  lineHeight: '1.1',
+                  textAlign: 'center',
+                  textTransform: 'capitalize'
+                }}
+              >
+                No upcoming events,<br />
+                let's find you something!
+              </Typography>
+              
+              {/* Explore Events Button */}
+              <Button
+                variant="outlined"
+                onClick={scrollToRecommendedEvents}
+                sx={{
+                  mt: 3,
+                  px: 4,
+                  py: 1.5,
+                  backgroundColor: 'transparent',
+                  borderColor: colors.secondaryText,
+                  color: colors.primaryText,
+                  borderRadius: '12px',
+                  fontSize: '16px',
+                  fontWeight: 600,
+                  textTransform: 'none',
+                  '&:hover': {
+                    borderColor: 'colors.primaryText',
+                    transform: 'translateY(-2px)',
+                  },
+                  transition: 'all 200ms ease-out',
+                }}
+              >
+                Explore Events
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <Box 

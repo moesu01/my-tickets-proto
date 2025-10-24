@@ -13,10 +13,10 @@ import { getMockData } from './assets/mock-data';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [useMinimalData, setUseMinimalData] = useState(false);
+  const [dataMode, setDataMode] = useState<'full' | 'minimal' | 'empty'>('full');
   
   // Get the appropriate dataset based on toggle state
-  const { tickets: mockTickets, waitlistItems: mockWaitlistItems, profile: mockProfile, recommendedEvents: mockRecommendedEvents } = getMockData(useMinimalData);
+  const { tickets: mockTickets, waitlistItems: mockWaitlistItems, profile: mockProfile, recommendedEvents: mockRecommendedEvents } = getMockData(dataMode);
   const [waitlistItems, setWaitlistItems] = useState(mockWaitlistItems);
 
   const handleTransfer = (ticketId: string) => {
@@ -54,7 +54,18 @@ function App() {
   };
 
   const handleDataToggle = () => {
-    setUseMinimalData(prev => !prev);
+    setDataMode(prev => {
+      switch (prev) {
+        case 'full':
+          return 'minimal';
+        case 'minimal':
+          return 'empty';
+        case 'empty':
+          return 'full';
+        default:
+          return 'full';
+      }
+    });
   };
 
   // Update waitlistItems when data changes
@@ -86,14 +97,16 @@ function App() {
           onRemoveFromWaitlist={handleRemoveFromWaitlist}
         />
 
-        {/* Waitlist Section */}
-        <WaitlistSection 
-          waitlistItems={waitlistItems}
-          isDarkMode={isDarkMode}
-          onRemove={(id: number) => console.log('Remove from waitlist:', id)}
-          onClaim={(id: number) => console.log('Claim ticket:', id)}
-          onUpdate={handleWaitlistUpdate}
-        />
+        {/* Waitlist Section - Show when there are waitlist items */}
+        {waitlistItems.length > 0 && (
+          <WaitlistSection 
+            waitlistItems={waitlistItems}
+            isDarkMode={isDarkMode}
+            onRemove={(id: number) => console.log('Remove from waitlist:', id)}
+            onClaim={(id: number) => console.log('Claim ticket:', id)}
+            onUpdate={handleWaitlistUpdate}
+          />
+        )}
 
         {/* Recommended Events Section */}
         <RecommendedEventsContainer events={mockRecommendedEvents} isDarkMode={isDarkMode} />
@@ -112,7 +125,7 @@ function App() {
       {/* Theme and Data Toggle */}
       <ThemeDataToggle
         isDarkMode={isDarkMode}
-        useMinimalData={useMinimalData}
+        dataMode={dataMode}
         onThemeToggle={handleThemeToggle}
         onDataToggle={handleDataToggle}
       />

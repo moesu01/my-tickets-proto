@@ -28,12 +28,14 @@ declare module '@mui/material/Typography' {
 // Color constants
 export const COLORS = {
   primaryText: 'oklch(0.4 0.0 0)', // Main text color for headers and important content
+  secondaryText: 'oklch(0.6 0.0 0)', // Secondary text color for headers and important content
   borderLight: 'rgba(0,0,0,.1)',
   iconColor: 'rgba(0,0,0,.35)',
 } as const;
 // Color constants DARK THEME
 export const COLORS_DARK = {
   primaryText: 'oklch(0.895 0.0093 106.58)', // Main text color for headers and important content
+  secondaryText: 'oklch(0.7 0.0 0)', // Secondary text color for headers and important content
   borderLight: 'rgba(255,255,255,.12)',
   iconColor: 'rgba(255,255,255,.35)',
 } as const;

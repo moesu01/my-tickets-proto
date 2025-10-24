@@ -156,9 +156,95 @@ children[targetIndex].scrollIntoView({
 
 **Key Learning:** When CSS effects depend on scroll state, update the state immediately before starting scroll animations to eliminate visual delays.
 
+## Data Toggle Implementation (Three Modes)
+
+### Overview
+Added a third data toggle mode that cycles through: Full Data → Minimal Data (1 event) → Empty Data (0 events) → Full Data
+
+### Implementation Details
+
+#### Mock Data Structure (`src/assets/mock-data/index.ts`)
+```tsx
+// Three datasets for different modes
+export const mockTickets: Ticket[] = [...]; // Full dataset
+export const minimalMockTickets: Ticket[] = [...]; // Single event
+export const emptyMockTickets: Ticket[] = []; // Empty array
+
+// Updated function signature
+export const getMockData = (dataMode: 'full' | 'minimal' | 'empty') => {
+  switch (dataMode) {
+    case 'minimal': return { tickets: minimalMockTickets, ... };
+    case 'empty': return { tickets: emptyMockTickets, ... };
+    case 'full': 
+    default: return { tickets: mockTickets, ... };
+  }
+};
+```
+
+#### App Component State Management (`src/App.tsx`)
+```tsx
+// Changed from boolean to string state
+const [dataMode, setDataMode] = useState<'full' | 'minimal' | 'empty'>('full');
+
+// Cycle through three states
+const handleDataToggle = () => {
+  setDataMode(prev => {
+    switch (prev) {
+      case 'full': return 'minimal';
+      case 'minimal': return 'empty';
+      case 'empty': return 'full';
+      default: return 'full';
+    }
+  });
+};
+
+// Conditional rendering
+{dataMode !== 'empty' && <WaitlistSection ... />}
+```
+
+#### Toggle Component Display (`src/components/ThemeDataToggle.tsx`)
+```tsx
+// Dynamic display based on mode
+const getDataModeDisplay = () => {
+  switch (dataMode) {
+    case 'full': return { text: '∞', tooltip: 'Switch to Minimal Data' };
+    case 'minimal': return { text: '1', tooltip: 'Switch to Empty Data' };
+    case 'empty': return { text: '0', tooltip: 'Switch to Full Data' };
+  }
+};
+```
+
+#### Empty State UI (`src/components/TicketContainer.tsx`)
+```tsx
+// Early return for empty state
+if (tickets.length === 0) {
+  return (
+    <Box>
+      <Typography variant="sectionHeader">YOUR TICKETS</Typography>
+      <Typography variant="h5">No events, let's find you something!</Typography>
+    </Box>
+  );
+}
+```
+
+### Key Design Decisions
+
+1. **Three-state cycle**: Full → Minimal → Empty → Full (not binary toggle)
+2. **Hide WaitlistSection**: Completely hidden in empty mode (not just empty state)
+3. **Consistent styling**: Empty state maintains same visual hierarchy as normal state
+4. **Early return pattern**: Clean separation of empty vs normal rendering logic
+
+### Benefits
+
+- **Testing flexibility**: Easy to test different data scenarios
+- **User experience**: Clear progression through different states
+- **Code organization**: Clean separation of concerns for each mode
+- **Maintainability**: Easy to add more modes in the future
+
 ## Future Considerations
 
 - Consider using Intersection Observer API for more reliable active ticket detection
 - Monitor browser compatibility for scroll snap features
 - Test on various screen sizes and devices
 - **Remember: Scroll snap fixes are usually simpler than they seem**
+- Consider adding more data modes (e.g., "many" for stress testing)

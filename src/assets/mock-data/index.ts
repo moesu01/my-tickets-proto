@@ -86,16 +86,32 @@ export const mockTickets: Ticket[] = [
     eventSeries: "Mike Nasty Presents",
     venue: "Le Poisson Rouge",
     location: "New York, NY",
-    ticketType: "GA Tier 1",
+    ticketType: "GA Tier 1", // Keep for backward compatibility
     date: "2025-06-06",
     time: "11:00PM",
-    admitCount: 2,
-    ticketId: "012390zzv9a0d9f83",
-    qrCode: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI2ZmZiIvPjx0ZXh0IHg9IjYwIiB5PSI2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSIjMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5RUiBDb2RlPC90ZXh0Pjwvc3ZnPg==",
+    admitCount: 2, // Keep for backward compatibility
+    ticketId: "012390zzv9a0d9f83", // Keep for backward compatibility
+    qrCode: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI2ZmZiIvPjx0ZXh0IHg9IjYwIiB5PSI2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSIjMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5RUiBDb2RlPC90ZXh0Pjwvc3ZnPg==", // Keep for backward compatibility
     eventImage: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&h=300&fit=crop",
     theme: "purple",
     status: "past",
-    totalPrice: "$89.00"
+    totalPrice: "$89.00", // Keep for backward compatibility
+    tickets: [
+      {
+        ticketType: "GA Tier 1",
+        totalPrice: "$89.00",
+        admitCount: 2,
+        ticketId: "012390zzv9a0d9f83",
+        qrCode: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI2ZmZiIvPjx0ZXh0IHg9IjYwIiB5PSI2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSIjMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5RUiBDb2RlPC90ZXh0Pjwvc3ZnPg=="
+      },
+      {
+        ticketType: "VIP Table",
+        totalPrice: "$156.00",
+        admitCount: 4,
+        ticketId: "012390zzv9a0d9f89",
+        qrCode: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI2ZmZiIvPjx0ZXh0IHg9IjYwIiB5PSI2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSIjMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5RUiBDb2RlPC90ZXh0Pjwvc3ZnPg=="
+      }
+    ]
   },
   {
     id: 5,
@@ -103,7 +119,7 @@ export const mockTickets: Ticket[] = [
     eventSeries: "Matinee Social Club",
     venue: "Le Poisson Rouge",
     location: "New York, NY",
-    ticketType: "GA Tier 1",
+    ticketType: "(2x) GA Tier 1",
     date: "2025-08-23",
     time: "5:00PM",
     admitCount: 2,
@@ -361,11 +377,64 @@ export const minimalMockTickets: Ticket[] = [
 
 export const minimalMockWaitlistItems: WaitlistItem[] = [];
 
+// Empty dataset for testing 0 events scenario
+export const emptyMockTickets: Ticket[] = [];
+export const emptyMockWaitlistItems: WaitlistItem[] = [
+  {
+    id: 1,
+    eventName: "Mach-HOMMY Presents: Three Peat Tour",
+    status: "ongoing",
+    expirationDate: "Jan 15, 2025 before 11:59PM",
+    ticketId: "TKT-001-2024",
+    isClaimed: false,
+    quantity: 1,
+    ticketType: "GA Advance",
+    totalPrice: "$144.00",
+    joinedOn: "Tue Sep 16, 07:36AM",
+    venue: "Le Poisson Rouge",
+    date: "Jan 15, 2025",
+    time: "11:00PM",
+    eventImage: `${process.env.PUBLIC_URL}/design/mach-hommy.png`
+  },
+  {
+    id: 2,
+    eventName: "GIMME Presents: Underground Hip-Hop Experience",
+    status: "ongoing",
+    expirationDate: "Jan 20, 2025 before 11:59PM",
+    ticketId: "TKT-002-2024",
+    isClaimed: false,
+    quantity: 2,
+    ticketType: "GA Advance",
+    totalPrice: "$198.00",
+    joinedOn: "Thu Sep 12, 09:22AM",
+    venue: "Le Poisson Rouge",
+    date: "Jan 20, 2025",
+    time: "6:00PM",
+    eventImage: `${process.env.PUBLIC_URL}/design/gimme.png`
+  }
+];
+
 // Function to get the appropriate dataset based on mode
-export const getMockData = (useMinimalData: boolean) => {
-  // Get the base data
-  const baseTickets = useMinimalData ? minimalMockTickets : mockTickets;
-  const baseWaitlistItems = useMinimalData ? minimalMockWaitlistItems : mockWaitlistItems;
+export const getMockData = (dataMode: 'full' | 'minimal' | 'empty') => {
+  // Get the base data based on mode
+  let baseTickets: Ticket[];
+  let baseWaitlistItems: WaitlistItem[];
+  
+  switch (dataMode) {
+    case 'minimal':
+      baseTickets = minimalMockTickets;
+      baseWaitlistItems = minimalMockWaitlistItems;
+      break;
+    case 'empty':
+      baseTickets = emptyMockTickets;
+      baseWaitlistItems = emptyMockWaitlistItems;
+      break;
+    case 'full':
+    default:
+      baseTickets = mockTickets;
+      baseWaitlistItems = mockWaitlistItems;
+      break;
+  }
   
   // Replace dynamic date placeholders with actual dates
   const ticketsWithDynamicDates = baseTickets.map(ticket => {

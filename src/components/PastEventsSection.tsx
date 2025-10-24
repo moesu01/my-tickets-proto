@@ -63,6 +63,24 @@ const PastEventsSection: React.FC<PastEventsSectionProps> = ({
     }
   };
 
+  const calculateTotalCost = (ticket: Ticket) => {
+    if (ticket.tickets && ticket.tickets.length > 0) {
+      // Calculate total from multiple tickets
+      const total = ticket.tickets.reduce((sum, ticketItem) => {
+        if (ticketItem.totalPrice) {
+          const price = parseFloat(ticketItem.totalPrice.replace('$', '').replace(',', ''));
+          return sum + price;
+        }
+        return sum;
+      }, 0);
+      return `$${total.toFixed(2)}`;
+    } else if (ticket.totalPrice) {
+      // Use single ticket price
+      return ticket.totalPrice;
+    }
+    return 'N/A';
+  };
+
   if (tickets.length === 0) {
     return null;
   }
@@ -199,9 +217,9 @@ const PastEventsSection: React.FC<PastEventsSectionProps> = ({
         {/* Table Header */}
         <Box className="past-events-table-header" sx={{ 
           display: 'grid',
-          gridTemplateColumns: '2fr 1fr 1fr 1fr',
+          gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr',
           alignItems: 'center',
-          px: 3,
+          px: 2,
           py: 1.5,
           backgroundColor: 'transparent',
           mb: 0,
@@ -216,8 +234,11 @@ const PastEventsSection: React.FC<PastEventsSectionProps> = ({
           <Typography variant="body2" sx={{ fontFamily: "'IBM Plex Mono', sans-serif", fontWeight: '500', letterSpacing: '0.05em', fontSize: '0.75rem', color: colors.primaryText }}>
             VENUE
           </Typography>
-          <Typography variant="body2" sx={{ fontFamily: "'IBM Plex Mono', sans-serif", fontWeight: '500', letterSpacing: '0.05em', fontSize: '0.75rem', color: colors.primaryText, textAlign: 'right' }}>
+          <Typography variant="body2" sx={{ fontFamily: "'IBM Plex Mono', sans-serif", fontWeight: '500', letterSpacing: '0.05em', fontSize: '0.75rem', color: colors.primaryText, textAlign: 'left' }}>
             TICKET
+          </Typography>
+          <Typography variant="body2" sx={{ fontFamily: "'IBM Plex Mono', sans-serif", fontWeight: '500', letterSpacing: '0.05em', fontSize: '0.75rem', color: colors.primaryText, textAlign: 'right' }}>
+            TOTAL
           </Typography>
         </Box>
 
@@ -244,9 +265,9 @@ const PastEventsSection: React.FC<PastEventsSectionProps> = ({
               >
                 <Box sx={{
                   display: 'grid',
-                  gridTemplateColumns: '2fr 1fr 1fr 1fr',
+                  gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr',
                   alignItems: 'center',
-                  px: 3,
+                  px: 2,
                   pt: 2,
                   pb: 2,
                   position: 'relative',
@@ -314,12 +335,26 @@ const PastEventsSection: React.FC<PastEventsSectionProps> = ({
                   </Box>
 
                   {/* Ticket Info */}
+                  <Box sx={{ textAlign: 'left', position: 'relative', zIndex: 1 }}>
+                    {ticket.tickets && ticket.tickets.length > 0 ? (
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                        {ticket.tickets.map((ticketItem, ticketIndex) => (
+                          <Typography key={ticketIndex} variant="body2" sx={{ fontSize: '0.75rem', color: colors.primaryText }}>
+                            {ticketItem.ticketType} {ticketItem.totalPrice && `• ${ticketItem.totalPrice}`}
+                          </Typography>
+                        ))}
+                      </Box>
+                    ) : (
+                      <Typography variant="body2" sx={{ fontSize: '0.75rem', color: colors.primaryText }}>
+                        {ticket.ticketType} {ticket.totalPrice && `• ${ticket.totalPrice}`}
+                      </Typography>
+                    )}
+                  </Box>
+
+                  {/* Total Cost */}
                   <Box sx={{ textAlign: 'right', position: 'relative', zIndex: 1 }}>
-                    <Typography variant="body2" sx={{ fontSize: '0.875rem', color: colors.primaryText }}>
-                      {ticket.ticketType}
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontSize: '0.75rem', color: 'white' }}>
-                      {ticket.totalPrice || 'N/A'}
+                    <Typography variant="body2" sx={{ fontSize: '0.875rem', color: colors.primaryText, fontWeight: 500 }}>
+                      {calculateTotalCost(ticket)}
                     </Typography>
                   </Box>
                 </Box>
