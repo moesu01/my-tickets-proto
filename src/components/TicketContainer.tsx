@@ -7,6 +7,7 @@ import NavigationButtons from './NavigationButtons';
 import CarouselIndicators from './CarouselIndicators';
 import { Ticket, WaitlistItem } from '../types';
 import { COLORS, COLORS_DARK } from '../theme';
+import { transitions } from '../utils/transitions';
 
 interface TicketContainerProps {
   tickets: Ticket[];
@@ -35,6 +36,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [activeTicketIndex, setActiveTicketIndex] = useState(0);
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
   const ticketsContainerRef = useRef<HTMLDivElement>(null);
 
   // Use appropriate color constants based on theme mode
@@ -117,6 +119,16 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
   };
 
   const waitlistStats = getWaitlistStats();
+
+  // Page load transition effect
+  useEffect(() => {
+    // Small delay to ensure smooth transition
+    const timer = setTimeout(() => {
+      setIsPageLoaded(true);
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   // Function to scroll to recommended events section
   const scrollToRecommendedEvents = () => {
@@ -259,6 +271,10 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
         position: 'relative',
         maxWidth: tickets.length === 1 ? '720px' : 'none',
         mx: tickets.length === 1 ? 'auto' : '0',
+        // Page load transition
+        opacity: isPageLoaded ? 1 : 0,
+        transform: isPageLoaded ? 'translateY(0)' : 'translateY(20px)',
+        transition: 'opacity 0.6s ease-out, transform 0.6s ease-out',
       }}
     >
       {/* Header Section 1 - Title, Count, Countdown, Arrows */}
@@ -515,6 +531,12 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
               filter: index === activeTicketIndex ? 'blur(0px)' : 'blur(2px) grayscale(1)',
               opacity: index === activeTicketIndex ? 1 : 0.65,
               transition: 'transform 0.3s ease-out, filter 0.3s ease-out, opacity 0.3s ease-out',
+              // Page load transition for individual tickets
+              ...(isPageLoaded ? {} : {
+                opacity: 0,
+                transform: 'scale(0.8) translateY(30px)',
+                filter: 'blur(10px)',
+              }),
               '&:hover': {
                 transform: index === activeTicketIndex ? 'scale(1)' : 'scale(0.85)',
                 filter: index === activeTicketIndex ? 'blur(0px)' : 'blur(0px) grayscale(0)',

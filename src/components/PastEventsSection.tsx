@@ -80,7 +80,7 @@ const PastEventsSection: React.FC<PastEventsSectionProps> = ({
       flexDirection: 'column',
       gap: { xs: 1, md: 1 },
       position: 'relative',
-      boxShadow: '0px 4px 12px 0px rgba(0,0,0,.05), 0px 2px 4px 0px rgba(0,0,0,0.025)',
+      
     }}>
       {/* Header Section */}
       <Box 
@@ -131,7 +131,7 @@ const PastEventsSection: React.FC<PastEventsSectionProps> = ({
             display: 'flex', 
             alignItems: 'center',
             gap: 1,
-            flexDirection: { xs: 'column', md: 'row' },
+            flexDirection: { xs: 'row', md: 'row' },
           }}>
             <Typography 
               variant="h5" 
