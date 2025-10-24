@@ -251,11 +251,11 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
         // border: `1px solid ${colors.borderLight}`,
         // boxShadow: '0px 4px 12px 0px rgba(0,0,0,.05), 0px 2px 4px 0px rgba(0,0,0,0.025)',
         pt: 1,
-        pb: { xs: 2, md: 1 },
-        px: { xs: 0, md: 0 },
+        pb: 2, // Mobile default - was: { xs: 2, md: 1 }
+        px: 0, // Mobile default - was: { xs: 0, md: 0 }
         display: 'flex',
-        flexDirection: { xs: 'column', md: 'row' },
-        gap: { xs: 1, md: 2 },
+        flexDirection: 'column', // Mobile default - was: { xs: 'column', md: 'row' }
+        gap: 1, // Mobile default - was: { xs: 1, md: 2 }
         position: 'relative',
         maxWidth: tickets.length === 1 ? '720px' : 'none',
         mx: tickets.length === 1 ? 'auto' : '0',
@@ -267,15 +267,15 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
         className="upcoming-events-header-top"
         sx={{ 
           display: 'flex', 
-          gap: { xs: 2, md: 6 }, 
+          gap: 2, // Mobile default - was: { xs: 2, md: 6 }
           flexDirection: 'column',
-          alignItems: { xs: 'center', md: 'center' }, 
-          justifyContent: { xs: 'center', md: 'center' }, 
+          alignItems: 'center', // Mobile default - was: { xs: 'center', md: 'center' }
+          justifyContent: 'center', // Mobile default - was: { xs: 'center', md: 'center' }
           mb: 0,
           pt: 2,
-          pb: { xs: 0, md: 2 },
-          minWidth: { xs: '100%', md: '280px' },
-          width: { xs: '100%', md: 'auto' }
+          pb: 0, // Mobile default - was: { xs: 0, md: 2 }
+          minWidth: '100%', // Mobile default - was: { xs: '100%', md: '280px' }
+          width: '100%' // Mobile default - was: { xs: '100%', md: 'auto' }
         }}
       >
         {/* KYD Summary Header */}
@@ -284,9 +284,9 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
           component="h1" 
           sx={{ 
             color: colors.primaryText,
-            pt: { xs: 0, md: 0 },
+            pt: 0, // Mobile default - was: { xs: 0, md: 0 }
             mb: 0,
-            textAlign: { xs: 'center', md: 'left' }
+            textAlign: 'center' // Mobile default - was: { xs: 'center', md: 'left' }
           }}
         >
           YOUR TICKETS
@@ -295,7 +295,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
           <Box 
             className="events-count-content"
-            sx={{ display: 'flex', flexDirection: 'column', alignItems: { xs: 'center', md: 'center' } }}
+            sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} // Mobile default - was: { xs: 'center', md: 'center' }
           >
             <Typography 
               variant="h5" 
@@ -381,7 +381,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
             colors={colors}
             size="large"
             sx={{
-           display: { xs: 'none', md: 'flex' },
+           display: 'none', // Mobile default - was: { xs: 'none', md: 'flex' }
             }}
           />
         )}
@@ -392,7 +392,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
           activeIndex={activeTicketIndex}
           containerRef={ticketsContainerRef}
           colors={colors}
-          display={{ xs: 'flex', md: 'flex' }}
+          display="flex" // Mobile default - was: { xs: 'flex', md: 'flex' }
         />
         
         {/* Summary Stats List - Desktop Only */}
@@ -406,7 +406,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
               mt: 2,
               width: '100%',
               maxWidth: '90%',
-              display: { xs: 'none', md: 'block' }, // Only show on desktop
+              display: 'none', // Mobile default - was: { xs: 'none', md: 'block' } // Only show on desktop
             }}
           >
             {/* Single waitlist item */}
@@ -417,7 +417,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
               rightIcon={TimerOutlined}
               onClick={scrollToWaitlistSection}
               colors={colors}
-              display={{ xs: 'none', md: 'flex' }}
+              display={{ xs: 'none', md: 'none' }} // Mobile default - was: { xs: 'none', md: 'flex' }
             />
           </Box>
         )}
@@ -426,8 +426,8 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
         {tickets.length === 1 && (
           <InfoContainer
             leftIcon={LocationOn}
-            title="Get Directions to"
-            subtitle={tickets[0].venue}
+            title="Directions to next event"
+            subtitle={tickets[0].eventName}
             rightIcon={NearMe}
             onClick={() => {
               // Open maps with venue address
@@ -437,7 +437,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
               window.open(mapsUrl, '_blank');
             }}
             colors={colors}
-            display={{ xs: 'none', md: 'flex' }}
+            display={{ xs: 'none', md: 'none' }} // Mobile default - was: { xs: 'none', md: 'flex' }
             alignItems="flex-start"
           />
         )}
@@ -451,12 +451,12 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
         sx={{ 
           display: 'flex', // Show on all screen sizes
           alignItems: 'stretch', // Make all cards stretch to same height
-          gap: { xs: 2, md: 4 }, // Smaller gap on mobile (16px), larger on desktop (24px)
+          gap: 2, // Mobile default - was: { xs: 2, md: 4 } // Smaller gap on mobile (16px), larger on desktop (24px)
           py: 2,
-          pl: { xs: tickets.length === 1 ? 0 : 4, md: 1.65 }, // Conditional padding: 0 for single ticket (centered), 4 for multiple tickets (scroll snap)
+          pl: tickets.length === 1 ? 0 : 4, // Mobile default - was: { xs: tickets.length === 1 ? 0 : 4, md: 1.65 } // Conditional padding: 0 for single ticket (centered), 4 for multiple tickets (scroll snap)
           pr: tickets.length === 1 
-            ? { xs: 0, md: 1.65 } // No padding on mobile for single ticket
-            : { xs: 8, md: 24 }, // No padding on mobile, extra right padding for multiple tickets on desktop
+            ? 0 // Mobile default - was: { xs: 0, md: 1.65 } // No padding on mobile for single ticket
+            : 8, // Mobile default - was: { xs: 8, md: 24 } // No padding on mobile, extra right padding for multiple tickets on desktop
           // Extend container width so CSS mask fades outside visible area
           width: '100%',
           // marginLeft: '-%', // Center the extended container
@@ -464,8 +464,8 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
           overflowY: 'visible', // Prevent vertical scrolling
           // CSS Scroll Snapping
           scrollSnapType: 'x mandatory',
-          scrollPaddingLeft: { xs: '16px', md: '24px' }, // Needed for proper centering
-          scrollPaddingRight: { xs: '16px', md: '24px' }, // Needed for proper centering
+          scrollPaddingLeft: '16px', // Mobile default - was: { xs: '16px', md: '24px' } // Needed for proper centering
+          scrollPaddingRight: '16px', // Mobile default - was: { xs: '16px', md: '24px' } // Needed for proper centering
           // Hide scrollbars
           scrollbarWidth: 'none', // Firefox
           '&::-webkit-scrollbar': {
@@ -473,7 +473,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
           },
           // Align single ticket to the right
           justifyContent: tickets.length === 1 
-            ? { xs: 'center', md: 'flex-end' } // Center on mobile, right-align on desktop
+            ? 'center' // Mobile default - was: { xs: 'center', md: 'flex-end' } // Center on mobile, right-align on desktop
             : 'flex-start', // Always left-align for multiple tickets
           // Dynamic CSS mask based on scroll position - only for multiple tickets
           ...(tickets.length > 1 && {
@@ -538,7 +538,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
           <Box
             sx={{
               flexShrink: 0,
-              width: { xs: '50vw', md: '50vw' }, // Extra space for last ticket to center
+              width: '50vw', // Mobile default - was: { xs: '50vw', md: '50vw' } // Extra space for last ticket to center
             }}
           />
         )}
@@ -551,7 +551,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
           id="upcoming-events-header-bottom"
           className="upcoming-events-header-bottom"
           sx={{ 
-            display: { xs: 'none', md: 'none' }, // Only show on mobile
+            display: 'flex', // Mobile default - was: { xs: 'none', md: 'none' } // Only show on mobile
             width: '100%',
             pt: 2.5,
             pb: 1,
@@ -573,8 +573,8 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
             {tickets.length === 1 && (
               <InfoContainer
                 leftIcon={LocationOn}
-                title={tickets[0].venue}
-                subtitle='Get directions to venue'
+                title='Directions to next event'
+                subtitle={tickets[0].eventName}
                 rightIcon={NearMe}
                 onClick={() => {
                   // Open maps with venue address

@@ -276,10 +276,11 @@ const WaitlistCollapsibleHeader: React.FC<WaitlistCollapsibleHeaderProps> = ({
                       sx={{
                         fontSize: {xs:'.875rem', md:'1rem'},
                         color: colors.secondaryText,
-                        opacity: 0.85,
+                        opacity: 0.65,
                         fontFamily: "'Inter', sans-serif",
                         letterSpacing: '-.02em',
                         lineHeight: 1.3,
+                        fontWeight: 500,
                       }}
                     >
                       {item.date} 

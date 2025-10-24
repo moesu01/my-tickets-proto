@@ -14,6 +14,7 @@ import {
   List as ListIcon,
   PlaylistAdd,
   KeyboardDoubleArrowRight,
+  IosShare,
 } from '@mui/icons-material';
 import { TicketCardProps } from '../types';
 
@@ -516,10 +517,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'stretch',
-            mb: 1.5,
-            gap:1,
 
-            flex: 1, // Grow to fill available space
 
           }}
         >
@@ -549,35 +547,6 @@ const TicketCard: React.FC<TicketCardProps> = ({
               {ticket.eventName}
             </Typography>
           </Box>
-          <Box className="title-links" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', gap: 1 }}>
-            <Link
-              href="#"
-              onClick={(e) => { e.preventDefault(); handleReceipt(); }}
-              sx={{
-                fontSize: '12px',
-                color: colors.primary,
-                textDecoration: 'underline',
-                fontWeight: 400,
-                fontFamily: "'Inter', sans-serif",
-                lineHeight: 1.25,
-              }}
-            >
-              Receipt
-            </Link>
-            <Link
-              href="#"
-              sx={{
-                fontSize: '12px',
-                color: colors.primary,
-                textDecoration: 'underline',
-                fontWeight: 400,
-                fontFamily: "'Inter', sans-serif",
-                lineHeight: 1.25,
-              }}
-            >
-              Referral link
-            </Link>
-          </Box>
         </Box>
 
         {/* Details section */}
@@ -587,7 +556,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
             mt: 2,
             display: 'flex',
             flexDirection: 'column',
-            gap: 2,
+            gap: 1,
             '& > *': {
               borderTop: `1px solid ${colors.subtle}`,
               pt: 1,
@@ -599,9 +568,10 @@ const TicketCard: React.FC<TicketCardProps> = ({
             className="venue-row"
             sx={{
               display: 'flex',
-              alignItems: 'center',
+              alignItems: 'flex-start',
+              flexDirection: 'column',
               justifyContent: 'space-between',
-              py: 0.5,
+              pt: 1,
             }}
           >
             <Typography
@@ -612,36 +582,60 @@ const TicketCard: React.FC<TicketCardProps> = ({
                 fontFamily: "'ibm plex mono', sans-serif",
                 letterSpacing: '.05em',
                 lineHeight: 1,
+                mb: 0.5,
               }}
             >
               VENUE
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+            <Box sx={{ width: '100%', display: 'flex', alignItems: 'center',justifyContent: 'space-between', gap: 0.75 }}>
               <Typography
                 sx={{
-                  fontSize: '12px',
+                 fontSize: '13px',
                   color: colors.primary,
                   fontWeight: 600,
                   fontFamily: "'Inter', sans-serif",
-                  letterSpacing: '-0.36px',
-                  lineHeight: 1,
+                  letterSpacing: '-3%',
+                  lineHeight: 1.3,
                 }}
               >
                 {ticket.venue}
               </Typography>
               <Typography
                 sx={{
-                  fontSize: '12px',
+                  fontSize: '13px',
                   color: colors.primary,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   fontFamily: "'Inter', sans-serif",
                   letterSpacing: '-0.36px',
-                  lineHeight: 1,
+                  lineHeight: 1.3,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5,
                 }}
               >
                 {ticket.location}
+                <Link
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const address = `${ticket.venue}, ${ticket.location}`;
+                    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+                    window.open(mapsUrl, '_blank');
+                  }}
+                  sx={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    textDecoration: 'none',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      opacity: 0.7,
+                    },
+                  }}
+                >
+                  <ExternalLinkIcon sx={{ fontSize: '13px', color: colors.secondary }} />
+                </Link>
+
               </Typography>
-              <ExternalLinkIcon sx={{ fontSize: '11px', color: '#666' }} />
             </Box>
           </Box>
 
@@ -650,9 +644,9 @@ const TicketCard: React.FC<TicketCardProps> = ({
             className="ticket-type-row"
             sx={{
               display: 'flex',
-              alignItems: 'center',
+              flexDirection: 'column',
               justifyContent: 'space-between',
-              py: 0.5,
+              pt: 1,
             }}
           >
             <Typography
@@ -663,22 +657,47 @@ const TicketCard: React.FC<TicketCardProps> = ({
                 fontFamily: "'ibm plex mono', sans-serif",
                 letterSpacing: '.05em',
                 lineHeight: 1,
+                mb: 0.5,
               }}
             >
               TICKET
             </Typography>
-            <Typography
-              sx={{
-                fontSize: '12px',
-                color: colors.primary,
-                fontWeight: 600,
-                fontFamily: "'Inter', sans-serif",
-                letterSpacing: '-0.36px',
-                lineHeight: 1,
-              }}
-            >
-              {ticket.ticketType}
-            </Typography>
+            <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 0.75 }}>
+              <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent:'space-between', gap: 0.75 }}>
+    
+                <Typography
+                  sx={{
+                    fontSize: '13px',
+                    color: colors.primary,
+                    fontWeight: 600,
+                    fontFamily: "'Inter', sans-serif",
+                    letterSpacing: '-3%',
+                    lineHeight: 1.3,
+                  }}
+                >
+                  {ticket.ticketType}
+                </Typography>
+                <Box
+                  sx={{
+                    backgroundColor: 'transparent',
+                    borderRadius: '16px',
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: '13px',
+                      color: colors.primary,
+                      fontWeight: 500,
+                      fontFamily: "'ibm plex mono', sans-serif",
+                      lineHeight: 1,
+                    }}
+                  >
+                    1x
+                  </Typography>
+                </Box>
+              </Box>
+              
+            </Box>
           </Box>
         </Box>
 
@@ -693,6 +712,9 @@ const TicketCard: React.FC<TicketCardProps> = ({
           }}
         >
           {/* Left section - Details */}
+
+
+          
           <Box
             className="ticket-info-section"
             sx={{
@@ -707,6 +729,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
               },
             }}
           >
+            
             {/* Date Group */}
             <Box className="date-group">
               <Typography
@@ -780,8 +803,60 @@ const TicketCard: React.FC<TicketCardProps> = ({
               </Typography>
             </Box>
 
+            {/* Receipt and Share Links Group */}
+            <Box className="links-group" sx={{ borderTop: 'none' }}>
+
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5,}}>
+                {/* <Link
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); handleReceipt(); }}
+                  sx={{
+                    fontSize: '13px',
+                    color: colors.primary,
+                    textDecoration: 'underline',
+                    fontWeight: 400,
+                    fontFamily: "'Inter', sans-serif",
+                    lineHeight: 1.25,
+                  }}
+                >
+                  Receipt
+                </Link> */}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 1,
+                      p: 1,
+                      border: `1px solid ${colors.subtle}`,
+                      borderRadius: '8px',
+                      transition: 'background 0.15s',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        backgroundColor: '#fff',
+                      },
+                    }}
+                  >
+                    <Link
+                      href="#"
+                      sx={{
+                        fontSize: '13px',
+                        color: colors.primary,
+                        textDecoration: 'none',
+                        fontWeight: 500,
+                        fontFamily: "'Inter', sans-serif",
+                        lineHeight: 1.25,
+                      }}
+                    >
+                      Share 
+                    </Link>
+                    <IosShare sx={{ fontSize: '14px', color: colors.secondary }} />
+                  </Box>
+              </Box>
+            </Box>
+
             {/* Admit Group */}
-            <Box className="admit-group">
+            {/* <Box className="admit-group">
               <Typography
                 sx={{
                   fontSize: '13px',
@@ -794,22 +869,9 @@ const TicketCard: React.FC<TicketCardProps> = ({
               >
                 Admit {ticket.admitCount}
               </Typography>
-            </Box>
+            </Box> */}
 
-            {/* Ticket ID */}
-            <Typography
-              className="ticket-id"
-              sx={{
-                fontSize: '10px',
-                color: 'rgba(0,0,0,0.6)',
-                fontFamily: "'Inter', sans-serif",
-                letterSpacing: '-0.3px',
-                lineHeight: 1,
-                height: 24,
-              }}
-            >
-              {ticket.ticketId}
-            </Typography>
+       
           </Box>
 
           {/* Right section - QR Code or Waitlisted Text */}
