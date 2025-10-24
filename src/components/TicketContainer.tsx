@@ -456,7 +456,7 @@ const TicketContainer: React.FC<TicketContainerProps> = ({
           pl: tickets.length === 1 ? 0 : 4, // Mobile default - was: { xs: tickets.length === 1 ? 0 : 4, md: 1.65 } // Conditional padding: 0 for single ticket (centered), 4 for multiple tickets (scroll snap)
           pr: tickets.length === 1 
             ? 0 // Mobile default - was: { xs: 0, md: 1.65 } // No padding on mobile for single ticket
-            : 8, // Mobile default - was: { xs: 8, md: 24 } // No padding on mobile, extra right padding for multiple tickets on desktop
+            : 0, // Mobile default - was: { xs: 8, md: 24 } // No padding on mobile, extra right padding for multiple tickets on desktop
           // Extend container width so CSS mask fades outside visible area
           width: '100%',
           // marginLeft: '-%', // Center the extended container
