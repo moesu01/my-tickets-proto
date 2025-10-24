@@ -6,14 +6,12 @@ import Navbar from './components/Navbar';
 import TicketContainer from './components/TicketContainer';
 import MobileTicketContainer from './components/MobileTicketContainer';
 import WaitlistSection from './components/WaitlistSection';
-import PastEventsSection from './components/PastEventsSection';
 import ProfileSection from './components/ProfileSection';
 import RecommendedEventsContainer from './components/RecommendedEventsContainer';
 import ThemeDataToggle from './components/ThemeDataToggle';
 import { getMockData } from './assets/mock-data';
 
 function App() {
-  const [pastEventsExpanded, setPastEventsExpanded] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [useMinimalData, setUseMinimalData] = useState(false);
   
@@ -100,19 +98,14 @@ function App() {
         {/* Recommended Events Section */}
         <RecommendedEventsContainer events={mockRecommendedEvents} isDarkMode={isDarkMode} />
 
-        {/* Past Events Section */}
-        <PastEventsSection 
-          tickets={pastTickets}
-          expanded={pastEventsExpanded}
-          onToggleExpanded={() => setPastEventsExpanded(!pastEventsExpanded)}
-          onReceipt={handleReceipt}
-          onViewTicket={handleViewTicket}
-        />
-
         {/* Profile Section */}
         <ProfileSection 
           profile={mockProfile}
           onUpdate={(updatedProfile: typeof mockProfile) => console.log('Update profile:', updatedProfile)}
+          isDarkMode={isDarkMode}
+          pastTickets={pastTickets}
+          onReceipt={handleReceipt}
+          onViewTicket={handleViewTicket}
         />
       </Container>
 

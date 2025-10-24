@@ -662,9 +662,8 @@ const TicketCard: React.FC<TicketCardProps> = ({
             >
               TICKET
             </Typography>
-            <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 0.75 }}>
+            <Box sx={{ width: '100%', display: 'flex', flexDirection:'column',alignItems: 'flex-start', justifyContent: 'space-between', gap: 0.5 }}>
               <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent:'space-between', gap: 0.75 }}>
-    
                 <Typography
                   sx={{
                     fontSize: '13px',
@@ -696,7 +695,38 @@ const TicketCard: React.FC<TicketCardProps> = ({
                   </Typography>
                 </Box>
               </Box>
-              
+              <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent:'space-between', gap: 0.75 }}>
+                <Typography
+                  sx={{
+                    fontSize: '13px',
+                    color: colors.primary,
+                    fontWeight: 600,
+                    fontFamily: "'Inter', sans-serif",
+                    letterSpacing: '-3%',
+                    lineHeight: 1.3,
+                  }}
+                >
+                  GA - Early Access
+                </Typography>
+                <Box
+                  sx={{
+                    backgroundColor: 'transparent',
+                    borderRadius: '16px',
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: '13px',
+                      color: colors.primary,
+                      fontWeight: 500,
+                      fontFamily: "'ibm plex mono', sans-serif",
+                      lineHeight: 1,
+                    }}
+                  >
+                    2x
+                  </Typography>
+                </Box>
+              </Box>
             </Box>
           </Box>
         </Box>
@@ -1031,15 +1061,25 @@ const TicketCard: React.FC<TicketCardProps> = ({
                 flex: 1,
                 backgroundColor: 'white',
                 borderRadius: '8px',
-                boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)',
+                boxShadow: '0px 1px 3px 0px rgba(0, 119, 195,.25)',
                 cursor: 'pointer',
                 height: '100%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '10px 12px',
+                transition: 'all 200ms cubic-bezier(.17,.67,.83,.67)',
+                willChange: 'transform, background-color, box-shadow',
                 '&:hover': {
                   backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  boxShadow: '0px 20px 8px rgba(0, 119, 195, 0.01), 0px 11px 7px rgba(0, 119, 195, 0.05), 0px 5px 5px rgba(0, 119, 195, 0.09), 0px 1px 3px rgba(0, 119, 195, 0.1)',
+                  transform: 'translateY(-1px)',
+                  '& .MuiTypography-root': {
+                    color: '#0077C3',
+                  },
+                  '& .MuiSvgIcon-root': {
+                    color: '#0077C3',
+                  },
                 },
               }}
             >
@@ -1059,7 +1099,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
                   sx={{ 
                     width: 20, 
                     height: 20, 
-                    color: 'rgba(0, 0, 0, 0.39)' 
+                    color: 'rgba(0, 89, 146,.65)'
                   }} 
                 />
               </Box>
@@ -1072,15 +1112,25 @@ const TicketCard: React.FC<TicketCardProps> = ({
                 flex: 1,
                 backgroundColor: 'white',
                 borderRadius: '8px',
-                boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)',
+                boxShadow: '0px 1px 3px 0px rgba(31, 168, 0,0.25)',
                 cursor: 'pointer',
                 height: '100%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '10px 12px',
+                transition: 'all 200ms cubic-bezier(.17,.67,.83,.67)',
+                willChange: 'transform, background-color, box-shadow',
                 '&:hover': {
                   backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  boxShadow: '0px 20px 8px rgba(31, 168, 0, 0.01), 0px 11px 7px rgba(31, 168, 0, 0.05), 0px 5px 5px rgba(31, 168, 0, 0.09), 0px 1px 3px rgba(31, 168, 0, 0.1)',
+                  transform: 'translateY(-1px)',
+                  '& .MuiTypography-root': {
+                    color: '#1FA800',
+                  },
+                  '& .MuiSvgIcon-root': {
+                    color: '#1FA800',
+                  },
                 },
               }}
             >
@@ -1100,7 +1150,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
                   sx={{ 
                     width:20, 
                     height: 20, 
-                    color: 'rgba(0, 0, 0, 0.39)' 
+                    color: 'rgba(19, 102, 0,.65)'
                   }} 
                 />
               </Box>

@@ -15,6 +15,7 @@ export interface Ticket {
   eventImage: string;
   theme: string;
   status: 'upcoming' | 'past' | 'cancelled' | 'refunded' | 'transferred' | 'waitlisted';
+  totalPrice?: string;
 }
 
 export interface WaitlistItem {

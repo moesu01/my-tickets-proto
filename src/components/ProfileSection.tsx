@@ -9,19 +9,34 @@ import {
 import {
   Person as PersonIcon,
 } from '@mui/icons-material';
-import { Profile } from '../types';
+import { Profile, Ticket } from '../types';
+import { COLORS, COLORS_DARK } from '../theme';
+import { transitions } from '../utils/transitions';
+import PastEventsSection from './PastEventsSection';
 
 interface ProfileSectionProps {
   profile: Profile;
   onUpdate: (updatedProfile: Profile) => void;
+  isDarkMode?: boolean;
+  pastTickets?: Ticket[];
+  onReceipt?: (ticketId: string) => void;
+  onViewTicket?: (ticketId: string) => void;
 }
 
 const ProfileSection: React.FC<ProfileSectionProps> = ({
   profile,
   onUpdate,
+  isDarkMode = false,
+  pastTickets = [],
+  onReceipt = () => {},
+  onViewTicket = () => {},
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState(profile);
+  const [orderHistoryExpanded, setOrderHistoryExpanded] = useState(false);
+
+  // Use appropriate color constants based on theme mode
+  const colors = isDarkMode ? COLORS_DARK : COLORS;
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -71,12 +86,16 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
       className="profile-section"
       sx={{ 
         mb: 4,
-        backgroundColor: 'white',
-        borderRadius: '8px',
-        boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)',
-        overflow: 'hidden',
-        py: 1.5, // 12px vertical padding
-        px: 0
+        border: `1px solid ${colors.borderLight}`,
+        borderRadius: '16px',
+        py: 1,
+        px: { xs: 0, md: 0 },
+        backgroundColor: 'background.paper',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: { xs: 1, md: 1 },
+        position: 'relative',
+        boxShadow: '0px 4px 12px 0px rgba(0,0,0,.05), 0px 2px 4px 0px rgba(0,0,0,0.025)',
       }}
       aria-labelledby="profile-heading"
       role="region"
@@ -88,33 +107,56 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           id="profile-header"
           className="profile-header"
           sx={{ 
-            display: 'flex',
-            alignItems: 'center',
+            display: 'flex', 
+            alignItems: { xs: 'center', md: 'center' }, 
+            flexDirection: { xs: 'column', md: 'row' },
             justifyContent: 'space-between',
-            pb: 1.5, // 12px bottom padding
-            pt: 0,
-            px: 1.5, // 12px horizontal padding
             mb: 0,
-            cursor: 'default'
+            px: 3,
+            pt: 2,
+            gap: 2,
           }}
         >
-          <Box sx={{ display: 'flex', gap: 1.25, alignItems: 'center' }}>
-            <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center' }}>
-              <Typography variant="h5" sx={{ 
-                fontSize: '1.25rem', 
-                fontWeight: 400, 
-                color: '#4a5568',
-                letterSpacing: '-0.6px'
-              }}>
-                My Profile
-              </Typography>
-              <PersonIcon 
-                id="profile-icon"
-                className="profile-icon"
-                sx={{ color: '#4a5568', fontSize: '18px' }} 
-                aria-hidden="true"
-              />
-            </Box>
+          <Box 
+            sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: { xs: 'center', md: 'flex-start' },
+              gap: 1,
+              flex: 1
+            }}
+          >
+            {/* Subhead */}
+            <Typography 
+              variant="sectionHeader" 
+              component="h1" 
+              sx={{ 
+                color: colors.primaryText,
+                pt: { xs: 0, md: 0 },
+                mb: 0,
+                textAlign: 'left',
+                ...transitions.A(true),
+              }}
+            >
+              Account
+            </Typography>
+            
+            {/* Main Headline */}
+            <Typography 
+              variant="h5" 
+              component="h2" 
+              sx={{ 
+                fontWeight: 600,
+                fontSize: '32px',
+                color: colors.primaryText,
+                letterSpacing: '-.0325em',
+                lineHeight: '1.1',
+                textTransform: 'capitalize',
+                textAlign: { xs: 'center', md: 'left' }
+              }}
+            >
+              Profile
+            </Typography>
           </Box>
           
           {!isEditing ? (
@@ -125,18 +167,19 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
               onClick={handleEdit}
               aria-label="Edit profile information"
               sx={{
-                height: '30px',
-                px: 1.5,
-                py: 1.25,
+                height: '40px',
+                px: 2,
+                py: 1.5,
                 borderRadius: '8px',
-                borderColor: '#cbd5e0',
-                color: '#4a5568',
-                fontSize: '12px',
+                borderColor: colors.borderLight,
+                color: colors.primaryText,
+                fontSize: '14px',
                 fontWeight: 500,
                 textTransform: 'none',
                 boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)',
+                ...transitions.A(true),
                 '&:hover': {
-                  borderColor: '#a0aec0',
+                  borderColor: colors.borderLight,
                   backgroundColor: 'rgba(0,0,0,0.04)',
                 },
               }}
@@ -148,7 +191,11 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
               id="profile-action-buttons"
               className="profile-action-buttons"
               component="div"
-              sx={{ display: 'flex', gap: 1 }}
+              sx={{ 
+                display: 'flex', 
+                gap: 1,
+                ...transitions.A(true),
+              }}
               role="group"
               aria-label="Profile editing actions"
             >
@@ -159,17 +206,17 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                 onClick={handleCancel}
                 aria-label="Cancel editing profile"
                 sx={{
-                  height: '30px',
-                  px: 1.5,
-                  py: 1.25,
+                  height: '40px',
+                  px: 2,
+                  py: 1.5,
                   borderRadius: '8px',
-                  borderColor: '#cbd5e0',
-                  color: '#4a5568',
-                  fontSize: '12px',
+                  borderColor: colors.borderLight,
+                  color: colors.primaryText,
+                  fontSize: '14px',
                   fontWeight: 500,
                   textTransform: 'none',
                   '&:hover': {
-                    borderColor: '#a0aec0',
+                    borderColor: colors.borderLight,
                     backgroundColor: 'rgba(0,0,0,0.04)',
                   },
                 }}
@@ -184,12 +231,12 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                 disabled={!isFormValid()}
                 aria-label="Save profile changes"
                 sx={{
-                  height: '30px',
-                  px: 1.5,
-                  py: 1.25,
+                  height: '40px',
+                  px: 2,
+                  py: 1.5,
                   borderRadius: '8px',
                   backgroundColor: '#000000',
-                  fontSize: '12px',
+                  fontSize: '14px',
                   fontWeight: 500,
                   textTransform: 'none',
                   '&:hover': {
@@ -212,7 +259,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           component="main"
           id="profile-fields-section"
           className="profile-fields-section"
-          sx={{ px: 1.5, py: 0 }} // 12px horizontal padding
+          sx={{ px: 3, py: 0 }} // Match header padding
           role="main"
           aria-label="Profile information fields"
         >
@@ -227,7 +274,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             <Divider 
               id="name-fields-divider"
               className="name-fields-divider"
-              sx={{ mb: 1.5, borderColor: '#e2e8f0' }} 
+              sx={{ mb: 1.5, borderColor: colors.borderLight }} 
               role="separator"
               aria-hidden="true"
             />
@@ -255,7 +302,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                 sx={{ 
                   fontSize: '12px',
                   fontWeight: 500,
-                  color: '#718096',
+                  color: colors.iconColor,
                   lineHeight: '1.25',
                   flex: 1
                 }}
@@ -271,7 +318,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                 sx={{ 
                   fontSize: '12px',
                   fontWeight: 500,
-                  color: '#718096',
+                  color: colors.iconColor,
                   lineHeight: '1.25',
                   flex: 1
                 }}
@@ -334,7 +381,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                     sx={{ 
                       fontSize: '16px',
                       fontWeight: 400,
-                      color: '#2d3748',
+                      color: colors.primaryText,
                       lineHeight: '24px'
                     }}
                   >
@@ -383,7 +430,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                     sx={{ 
                       fontSize: '16px',
                       fontWeight: 400,
-                      color: '#2d3748',
+                      color: colors.primaryText,
                       lineHeight: '24px'
                     }}
                   >
@@ -405,7 +452,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             <Divider 
               id="contact-fields-divider"
               className="contact-fields-divider"
-              sx={{ mb: 1.5, borderColor: '#e2e8f0' }} 
+              sx={{ mb: 1.5, borderColor: colors.borderLight }} 
               role="separator"
               aria-hidden="true"
             />
@@ -433,7 +480,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                 sx={{ 
                   fontSize: '12px',
                   fontWeight: 500,
-                  color: '#718096',
+                  color: colors.iconColor,
                   lineHeight: '1.25',
                   flex: 1
                 }}
@@ -449,7 +496,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                 sx={{ 
                   fontSize: '12px',
                   fontWeight: 500,
-                  color: '#718096',
+                  color: colors.iconColor,
                   lineHeight: '1.25',
                   flex: 1
                 }}
@@ -513,7 +560,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                     sx={{ 
                       fontSize: '16px',
                       fontWeight: 400,
-                      color: '#2d3748',
+                      color: colors.primaryText,
                       lineHeight: '24px'
                     }}
                   >
@@ -563,7 +610,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                     sx={{ 
                       fontSize: '16px',
                       fontWeight: 400,
-                      color: '#2d3748',
+                      color: colors.primaryText,
                       lineHeight: '24px'
                     }}
                   >
@@ -574,6 +621,18 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             </Box>
           </Box>
         </Box>
+
+        {/* Order History Section */}
+        {pastTickets.length > 0 && (
+          <PastEventsSection 
+            tickets={pastTickets}
+            expanded={orderHistoryExpanded}
+            onToggleExpanded={() => setOrderHistoryExpanded(!orderHistoryExpanded)}
+            onReceipt={onReceipt}
+            onViewTicket={onViewTicket}
+            isDarkMode={isDarkMode}
+          />
+        )}
     </Box>
   );
 };

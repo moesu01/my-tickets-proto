@@ -13,6 +13,8 @@ import {
   KeyboardArrowDown as ExpandMoreIcon,
 } from '@mui/icons-material';
 import { Ticket } from '../types';
+import { COLORS, COLORS_DARK } from '../theme';
+import { transitions } from '../utils/transitions';
 
 interface PastEventsSectionProps {
   tickets: Ticket[];
@@ -20,6 +22,7 @@ interface PastEventsSectionProps {
   onToggleExpanded: () => void;
   onReceipt: (ticketId: string) => void;
   onViewTicket: (ticketId: string) => void;
+  isDarkMode?: boolean;
 }
 
 const PastEventsSection: React.FC<PastEventsSectionProps> = ({
@@ -28,9 +31,13 @@ const PastEventsSection: React.FC<PastEventsSectionProps> = ({
   onToggleExpanded,
   onReceipt,
   onViewTicket,
+  isDarkMode = false,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  // Use appropriate color constants based on theme mode
+  const colors = isDarkMode ? COLORS_DARK : COLORS;
 
   const formatDate = (dateString: string, timeString: string) => {
     const date = new Date(dateString);
@@ -62,74 +69,117 @@ const PastEventsSection: React.FC<PastEventsSectionProps> = ({
 
   return (
     <Box id="past-events-section" className="past-events-container" sx={{ 
-      mb: 4,
-      p: 1.5, // 12px padding
-      backgroundColor: '#fafafa',
-      borderRadius: '8px',
-      boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.08)'
+      mb: 0,
+      mx: 4,
+      borderTop: `1px solid ${colors.borderLight}`,
+      borderRadius: '0px',
+      py: 1,
+      px: { xs: 0, md: 0 },
+      backgroundColor: 'background.paper',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: { xs: 1, md: 1 },
+      position: 'relative',
+      boxShadow: '0px 4px 12px 0px rgba(0,0,0,.05), 0px 2px 4px 0px rgba(0,0,0,0.025)',
     }}>
-      {/* Header - matching Figma design */}
+      {/* Header Section */}
       <Box 
-        className="past-events-header" 
+        component="header"
+        id="past-events-header"
+        className="past-events-header"
         onClick={onToggleExpanded}
         sx={{ 
-          display: 'flex',
-          alignItems: 'center',
+          display: 'flex', 
+          alignItems: { xs: 'center', md: 'center' }, 
+          flexDirection: { xs: 'column', md: 'row' },
           justifyContent: 'space-between',
-          pb: 1,
-          pt: 1,
-          px: 0,
           mb: 0,
+          px: 0,
+          pt: 2,
+          gap: 2,
           cursor: 'pointer',
           '&:hover': {
             opacity: 0.8
           }
         }}
       >
-        <Box sx={{ display: 'flex', gap: 1.25, alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center' }}>
-            <Typography variant="h5" sx={{ 
-              fontSize: '1.25rem', 
-              fontWeight: 400, 
-              color: '#4a5568',
-              letterSpacing: '-0.6px'
-            }}>
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: { xs: 'center', md: 'flex-start' },
+            gap: 1,
+            flex: 1
+          }}
+        >
+          {/* Subhead */}
+          <Typography 
+            variant="sectionHeader" 
+            component="h1" 
+            sx={{ 
+              color: colors.primaryText,
+              pt: { xs: 0, md: 0 },
+              mb: 0,
+              textAlign: 'left',
+            }}
+          >
+            Order History
+          </Typography>
+          
+          {/* Main Headline with Count */}
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center',
+            gap: 1,
+            flexDirection: { xs: 'column', md: 'row' },
+          }}>
+            <Typography 
+              variant="h5" 
+              component="h2" 
+              sx={{ 
+                fontWeight: 600,
+                fontSize: '1.75rem',
+                color: colors.primaryText,
+                letterSpacing: '-.0325em',
+                lineHeight: '1.1',
+                textTransform: 'capitalize',
+                textAlign: { xs: 'center', md: 'left' }
+              }}
+            >
               Past Events
             </Typography>
+            
+            {/* Event Count Badge */}
             <Box sx={{ 
-              position: 'relative',
-              borderRadius: '29px',
-              width: '22px',
-              height: '22px'
+              backgroundColor: 'transparent', // Positive green (MUI success.main or similar)
+              color: colors.primaryText, 
+              border: `1px solid ${colors.primaryText}`,
+              borderRadius: '100px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              fontSize: '22px',
+              fontWeight: 500,
+              lineHeight: 1,
+              pr: 1.5,
+              pl: 1.25,
+              py: 1,
+              aspectRatio: '1/1',
+              height: '34px', // Fixed height
+              width: '34px', // Fixed width
             }}>
-              <Box sx={{ 
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                p: 0.5,
-                width: '22px',
-                height: '22px'
-              }}>
-                <Typography variant="body2" sx={{ 
-                  fontSize: '0.75rem',
-                  fontWeight: 'bold',
-                  color: '#4a5568',
-                  lineHeight: 1
-                }}>
-                  {tickets.length}
-                </Typography>
-              </Box>
-              <Box sx={{
-                position: 'absolute',
-                inset: 0,
-                border: '1px solid #a0aec0',
-                borderRadius: '29px',
-                pointerEvents: 'none'
-              }} />
+              {tickets.length}
             </Box>
           </Box>
         </Box>
-        {expanded ? <ExpandLessIcon sx={{ color: '#4a5568' }} /> : <ExpandMoreIcon sx={{ color: '#4a5568' }} />}
+
+        {/* Expand/Collapse Button */}
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center',
+        }}>
+          {expanded ? <ExpandLessIcon sx={{ color: colors.primaryText }} /> : <ExpandMoreIcon sx={{ color: colors.primaryText }} />}
+        </Box>
       </Box>
 
       <Collapse 
@@ -157,26 +207,26 @@ const PastEventsSection: React.FC<PastEventsSectionProps> = ({
           mb: 0,
           width: '100%'
         }}>
-          <Typography variant="body2" sx={{ fontWeight: 'bold', fontSize: '0.75rem', color: '#4a5568' }}>
+          <Typography variant="body2" sx={{ fontFamily: "'IBM Plex Mono', sans-serif", fontWeight: '500', letterSpacing: '0.05em', lineHeight: '1.2', fontSize: '0.875rem', color: colors.primaryText, }}>
             EVENT
           </Typography>
-          <Typography variant="body2" sx={{ fontWeight: 'bold', fontSize: '0.75rem', color: '#4a5568' }}>
+          <Typography variant="body2" sx={{ fontFamily: "'IBM Plex Mono', sans-serif", fontWeight: '500', letterSpacing: '0.05em', fontSize: '0.75rem', color: colors.primaryText }}>
             DATE
           </Typography>
-          <Typography variant="body2" sx={{ fontWeight: 'bold', fontSize: '0.75rem', color: '#4a5568' }}>
+          <Typography variant="body2" sx={{ fontFamily: "'IBM Plex Mono', sans-serif", fontWeight: '500', letterSpacing: '0.05em', fontSize: '0.75rem', color: colors.primaryText }}>
             VENUE
           </Typography>
-          <Typography variant="body2" sx={{ fontWeight: 'bold', fontSize: '0.75rem', color: '#4a5568', textAlign: 'right' }}>
-            ACTIONS
+          <Typography variant="body2" sx={{ fontFamily: "'IBM Plex Mono', sans-serif", fontWeight: '500', letterSpacing: '0.05em', fontSize: '0.75rem', color: colors.primaryText, textAlign: 'right' }}>
+            TICKET
           </Typography>
         </Box>
 
         {/* Table Container - matching Figma design */}
         <Box id="past-events-table" className="past-events-table-container" sx={{ 
-          backgroundColor: '#fafafa',
+          backgroundColor: 'background.paper',
           borderRadius: '8px',
           overflow: 'hidden',
-          border: '1px solid #e2e8f0',
+          border: `1px solid ${colors.borderLight}`,
           boxShadow: '0px 1px 6px 0px rgba(0,0,0,0.05)'
         }}>
           {tickets.map((ticket, index) => {
@@ -187,9 +237,9 @@ const PastEventsSection: React.FC<PastEventsSectionProps> = ({
               <Box
                 key={ticket.id}
                 sx={{
-                  backgroundColor: 'white',
-                  borderBottom: index < tickets.length - 1 ? '1px solid #e2e8f0' : 'none',
-                  '&:hover': { backgroundColor: '#f8f9fa' }
+                  backgroundColor: 'background.paper',
+                  borderBottom: index < tickets.length - 1 ? `1px solid ${colors.borderLight}` : 'none',
+                  '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)' }
                 }}
               >
                 <Box sx={{
@@ -220,7 +270,7 @@ const PastEventsSection: React.FC<PastEventsSectionProps> = ({
                   />
                   {/* Event Name & Status */}
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, position: 'relative', zIndex: 1 }}>
-                    <Typography variant="body2" sx={{ fontSize: '0.875rem', lineHeight: '1.3', fontWeight: 500, color: '#2d3748' }}>
+                    <Typography variant="body2" sx={{ fontSize: '0.875rem', lineHeight: '1.3', fontWeight: 500, color: colors.primaryText }}>
                       {ticket.eventName}
                     </Typography>
                     {statusBadge && (
@@ -245,58 +295,32 @@ const PastEventsSection: React.FC<PastEventsSectionProps> = ({
 
                   {/* Date */}
                   <Box sx={{ position: 'relative', zIndex: 1 }}>
-                    <Typography variant="body2" sx={{ fontSize: '0.875rem', color: '#2d3748' }}>
+                    <Typography variant="body2" sx={{ fontSize: '0.875rem', color: colors.primaryText }}>
                       {formattedDateTime.date}
                     </Typography>
-                    <Typography variant="body2" sx={{ fontSize: '0.75rem', color: '#718096' }}>
+                    <Typography variant="body2" sx={{ fontSize: '0.75rem', color: colors.iconColor }}>
                       {formattedDateTime.time}
                     </Typography>
                   </Box>
 
                   {/* Venue */}
                   <Box sx={{ position: 'relative', zIndex: 1 }}>
-                    <Typography variant="body2" sx={{ fontSize: '0.875rem', color: '#2d3748' }}>
+                    <Typography variant="body2" sx={{ fontSize: '0.875rem', color: colors.primaryText }}>
                       {ticket.venue}
                     </Typography>
-                    <Typography variant="body2" sx={{ fontSize: '0.75rem', color: '#718096' }}>
+                    <Typography variant="body2" sx={{ fontSize: '0.75rem', color: colors.iconColor }}>
                       {ticket.location}
                     </Typography>
                   </Box>
 
-                  {/* Actions */}
+                  {/* Ticket Info */}
                   <Box sx={{ textAlign: 'right', position: 'relative', zIndex: 1 }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, alignItems: 'flex-end' }}>
-                      <Link 
-                        component="button"
-                        onClick={(e) => { e.preventDefault(); onReceipt(ticket.ticketId); }}
-                        sx={{
-                          fontSize: '0.75rem',
-                          color: '#4a5568',
-                          textDecoration: 'underline',
-                          textTransform: 'none',
-                          '&:hover': {
-                            textDecoration: 'underline',
-                          }
-                        }}
-                      >
-                        Receipt
-                      </Link>
-                      <Link 
-                        component="button"
-                        onClick={(e) => { e.preventDefault(); onViewTicket(ticket.ticketId); }}
-                        sx={{
-                          fontSize: '0.75rem',
-                          color: '#4a5568',
-                          textDecoration: 'underline',
-                          textTransform: 'none',
-                          '&:hover': {
-                            textDecoration: 'underline',
-                          }
-                        }}
-                      >
-                        View
-                      </Link>
-                    </Box>
+                    <Typography variant="body2" sx={{ fontSize: '0.875rem', color: colors.primaryText }}>
+                      {ticket.ticketType}
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontSize: '0.75rem', color: 'white' }}>
+                      {ticket.totalPrice || 'N/A'}
+                    </Typography>
                   </Box>
                 </Box>
               </Box>
