@@ -6,6 +6,7 @@ import { RecommendedEventsContainerProps } from '../types';
 
 const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
   events,
+  onNavigateToEvent,
 }) => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -214,7 +215,7 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
               flexShrink: 0,
             }}
           >
-            <EventCard event={event} />
+            <EventCard event={event} onNavigateToEvent={onNavigateToEvent} />
           </Box>
         ))}
       </Box>

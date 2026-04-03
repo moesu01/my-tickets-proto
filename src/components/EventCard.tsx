@@ -1,8 +1,8 @@
 import React from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { EventCardProps } from '../types';
 
-const EventCard: React.FC<EventCardProps> = ({ event }) => {
+const EventCard: React.FC<EventCardProps> = ({ event, onNavigateToEvent }) => {
   // Generate dynamic shadow styles (same as TicketCard)
   const dropShadowStyle = {
     boxShadow: `0px 4px 10px rgba(0, 0, 0, 0.15)`,
@@ -175,7 +175,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
         <Box
           id={`event-card-button-${event.id}`}
           className="event-card-button"
-          onClick={event.onGetTickets}
+          onClick={onNavigateToEvent ?? event.onGetTickets}
           sx={{
             backgroundColor: 'white',
             borderRadius: '8px',

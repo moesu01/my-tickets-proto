@@ -28,6 +28,10 @@ export interface WaitlistItem {
   ticketType: string;
   totalPrice: string;
   joinedOn: string;
+  venue?: string;
+  date?: string;
+  time?: string;
+  eventImage?: string;
 }
 
 export interface Profile {
@@ -85,8 +89,30 @@ export interface Event {
 
 export interface EventCardProps {
   event: Event;
+  onNavigateToEvent?: () => void;
 }
 
 export interface RecommendedEventsContainerProps {
   events: Event[];
+  onNavigateToEvent?: () => void;
+}
+
+export interface SoldOutTicketType {
+  id: string;
+  label: string;
+  sublabel?: string;
+  price: number;
+  soldOut: true;
+}
+
+export interface SoldOutEvent {
+  id: string;
+  title: string;
+  eventSeries: string;
+  date: string;
+  time: string;
+  venue: string;
+  location: string;
+  image: string;
+  ticketTypes: SoldOutTicketType[];
 }
