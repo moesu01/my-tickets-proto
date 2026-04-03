@@ -1,4 +1,4 @@
-import { Ticket, WaitlistItem, Profile, Event } from '../../types';
+import { Ticket, WaitlistItem, Profile, Event, SoldOutEvent } from '../../types';
 
 // Helper function to generate dates relative to today
 const getDateString = (daysFromToday: number): string => {
@@ -354,6 +354,24 @@ export const mockRecommendedEvents: Event[] = [
     onGetTickets: () => console.log('Get tickets for Matinee Social Club'),
   },
 ];
+
+export const mockSoldOutEvent: SoldOutEvent = {
+  id: "EV-mach-hommy-001",
+  title: "Mach-HOMMY",
+  eventSeries: "Three Peat",
+  date: "Sat, Apr 26",
+  time: "11:00PM → 3:00AM",
+  venue: "Le Poisson Rouge",
+  location: "New York, NY",
+  image: `${process.env.PUBLIC_URL}/design/mach-hommy.png`,
+  ticketTypes: [
+    { id: "ga-floor", label: "GA Floor", sublabel: "General Admission — Standing", price: 65, soldOut: true },
+    { id: "ga-tier-1", label: "GA Tier 1", sublabel: "General Admission — Standing", price: 55, soldOut: true },
+    { id: "ga-tier-2", label: "GA Tier 2", sublabel: "General Admission — Standing", price: 48, soldOut: true },
+    { id: "vip-table", label: "VIP Table Seating", sublabel: "Reserved table for up to 4 guests", price: 120, soldOut: true },
+    { id: "premium", label: "Premium Seating", sublabel: "Reserved front section", price: 78, soldOut: true },
+  ],
+};
 
 // Minimal dataset for testing single ticket scenario
 export const minimalMockTickets: Ticket[] = [

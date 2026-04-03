@@ -4,18 +4,21 @@ import { CssBaseline, Container } from '@mui/material';
 import { lightTheme, darkTheme } from './theme';
 import Navbar from './components/Navbar';
 import TicketContainer from './components/TicketContainer';
-import MobileTicketContainer from './components/MobileTicketContainer';
 import WaitlistSection from './components/WaitlistSection';
 import ProfileSection from './components/ProfileSection';
 import RecommendedEventsContainer from './components/RecommendedEventsContainer';
 import ThemeDataToggle from './components/ThemeDataToggle';
-import { getMockData } from './assets/mock-data';
+import EventPage from './components/EventPage';
+import { getMockData, mockSoldOutEvent } from './assets/mock-data';
+import { WaitlistItem } from './types';
+
+type Page = 'event' | 'tickets';
 
 function App() {
+  const [currentPage, setCurrentPage] = useState<Page>('event');
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [dataMode, setDataMode] = useState<'full' | 'minimal' | 'empty'>('full');
-  
-  // Get the appropriate dataset based on toggle state
+
   const { tickets: mockTickets, waitlistItems: mockWaitlistItems, profile: mockProfile, recommendedEvents: mockRecommendedEvents } = getMockData(dataMode);
   const [waitlistItems, setWaitlistItems] = useState(mockWaitlistItems);
 
@@ -41,12 +44,21 @@ function App() {
 
   const handleViewTicket = (ticketId: string) => {
     console.log('View ticket:', ticketId);
+    setCurrentPage('event');
   };
 
-  const handleWaitlistUpdate = (updatedItem: typeof mockWaitlistItems[0]) => {
-    setWaitlistItems(prev => 
+  const handleWaitlistUpdate = (updatedItem: WaitlistItem) => {
+    setWaitlistItems(prev =>
       prev.map(item => item.id === updatedItem.id ? updatedItem : item)
     );
+  };
+
+  const handleJoinWaitlist = (newItems: Omit<WaitlistItem, 'id'>[]) => {
+    setWaitlistItems(prev => {
+      const maxId = prev.reduce((max, item) => Math.max(max, item.id), 0);
+      const withIds = newItems.map((item, i) => ({ ...item, id: maxId + i + 1 }));
+      return [...prev, ...withIds];
+    });
   };
 
   const handleThemeToggle = () => {
@@ -56,19 +68,14 @@ function App() {
   const handleDataToggle = () => {
     setDataMode(prev => {
       switch (prev) {
-        case 'full':
-          return 'minimal';
-        case 'minimal':
-          return 'empty';
-        case 'empty':
-          return 'full';
-        default:
-          return 'full';
+        case 'full': return 'minimal';
+        case 'minimal': return 'empty';
+        case 'empty': return 'full';
+        default: return 'full';
       }
     });
   };
 
-  // Update waitlistItems when data changes
   useEffect(() => {
     setWaitlistItems(mockWaitlistItems);
   }, [mockWaitlistItems]);
@@ -76,53 +83,67 @@ function App() {
   const upcomingTickets = mockTickets.filter(ticket => ticket.status === 'upcoming' || ticket.status === 'waitlisted');
   const pastTickets = mockTickets.filter(ticket => ticket.status === 'past');
 
+  const recommendedEventsWithNav = mockRecommendedEvents.map(e => ({
+    ...e,
+    onGetTickets: () => setCurrentPage('event'),
+  }));
+
   return (
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
       <CssBaseline />
-      
-      {/* Navbar */}
-      <Navbar isDarkMode={isDarkMode} />
 
-      <Container maxWidth="lg" sx={{ py: 3 }}>
-        {/* Upcoming Events Section */}
-        <TicketContainer
-          tickets={upcomingTickets}
-          waitlistItems={waitlistItems}
-          title="Upcoming Events"
-          isDarkMode={isDarkMode}
-          onTransfer={handleTransfer}
-          onWaitlist={handleWaitlist}
-          onDownloadQR={handleDownloadQR}
-          onReceipt={handleReceipt}
-          onRemoveFromWaitlist={handleRemoveFromWaitlist}
+      <Navbar
+        isDarkMode={isDarkMode}
+        currentPage={currentPage}
+        onNavigate={setCurrentPage}
+      />
+
+      {currentPage === 'event' ? (
+        <EventPage
+          event={mockSoldOutEvent}
+          onJoinWaitlist={handleJoinWaitlist}
         />
-
-        {/* Waitlist Section - Show when there are waitlist items */}
-        {waitlistItems.length > 0 && (
-          <WaitlistSection 
+      ) : (
+        <Container maxWidth="lg" sx={{ py: 3 }}>
+          <TicketContainer
+            tickets={upcomingTickets}
             waitlistItems={waitlistItems}
+            title="Upcoming Events"
             isDarkMode={isDarkMode}
-            onRemove={(id: number) => console.log('Remove from waitlist:', id)}
-            onClaim={(id: number) => console.log('Claim ticket:', id)}
-            onUpdate={handleWaitlistUpdate}
+            onTransfer={handleTransfer}
+            onWaitlist={handleWaitlist}
+            onDownloadQR={handleDownloadQR}
+            onReceipt={handleReceipt}
+            onRemoveFromWaitlist={handleRemoveFromWaitlist}
           />
-        )}
 
-        {/* Recommended Events Section */}
-        <RecommendedEventsContainer events={mockRecommendedEvents} isDarkMode={isDarkMode} />
+          <RecommendedEventsContainer
+            events={recommendedEventsWithNav}
+            isDarkMode={isDarkMode}
+            onNavigateToEvent={() => setCurrentPage('event')}
+          />
 
-        {/* Profile Section */}
-        <ProfileSection 
-          profile={mockProfile}
-          onUpdate={(updatedProfile: typeof mockProfile) => console.log('Update profile:', updatedProfile)}
-          isDarkMode={isDarkMode}
-          pastTickets={pastTickets}
-          onReceipt={handleReceipt}
-          onViewTicket={handleViewTicket}
-        />
-      </Container>
+          {waitlistItems.length > 0 && (
+            <WaitlistSection
+              waitlistItems={waitlistItems}
+              isDarkMode={isDarkMode}
+              onRemove={(id: number) => console.log('Remove from waitlist:', id)}
+              onClaim={(id: number) => console.log('Claim ticket:', id)}
+              onUpdate={handleWaitlistUpdate}
+            />
+          )}
 
-      {/* Theme and Data Toggle */}
+          <ProfileSection
+            profile={mockProfile}
+            onUpdate={(updatedProfile: typeof mockProfile) => console.log('Update profile:', updatedProfile)}
+            isDarkMode={isDarkMode}
+            pastTickets={pastTickets}
+            onReceipt={handleReceipt}
+            onViewTicket={handleViewTicket}
+          />
+        </Container>
+      )}
+
       <ThemeDataToggle
         isDarkMode={isDarkMode}
         dataMode={dataMode}

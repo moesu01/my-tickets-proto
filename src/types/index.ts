@@ -1,36 +1,26 @@
 // TypeScript types for My Tickets application
 
-export interface TicketType {
-  ticketType: string;
-  totalPrice?: string;
-  admitCount: number;
-  ticketId: string;
-  qrCode: string;
-}
-
 export interface Ticket {
   id: number;
   eventName: string;
   eventSeries: string;
   venue: string;
   location: string;
-  ticketType: string; // Keep for backward compatibility
+  ticketType: string;
   date: string;
   time: string;
-  admitCount: number; // Keep for backward compatibility
-  ticketId: string; // Keep for backward compatibility
-  qrCode: string; // Keep for backward compatibility
+  admitCount: number;
+  ticketId: string;
+  qrCode: string;
   eventImage: string;
   theme: string;
   status: 'upcoming' | 'past' | 'cancelled' | 'refunded' | 'transferred' | 'waitlisted';
-  totalPrice?: string; // Keep for backward compatibility
-  tickets?: TicketType[]; // New property for multiple tickets
 }
 
 export interface WaitlistItem {
   id: number;
   eventName: string;
-  status: 'ongoing' | 'cancelled' | 'expired' | 'filled';
+  status: 'ongoing' | 'cancelled' | 'expired';
   expirationDate: string;
   ticketId?: string;
   isClaimed?: boolean;
@@ -38,9 +28,9 @@ export interface WaitlistItem {
   ticketType: string;
   totalPrice: string;
   joinedOn: string;
-  venue: string;
-  date: string;
-  time: string;
+  venue?: string;
+  date?: string;
+  time?: string;
   eventImage?: string;
 }
 
@@ -71,9 +61,6 @@ export interface WaitlistCardProps {
   item: WaitlistItem;
   onRemove?: (itemId: number) => void;
   onClaim?: (itemId: number) => void;
-  onEdit?: (itemId: number) => void;
-  onUnlist?: (itemId: number) => void;
-  showActions: 'active' | 'listed';
 }
 
 export interface PastEventRowProps {
@@ -102,9 +89,30 @@ export interface Event {
 
 export interface EventCardProps {
   event: Event;
+  onNavigateToEvent?: () => void;
 }
 
 export interface RecommendedEventsContainerProps {
   events: Event[];
-  isDarkMode?: boolean;
+  onNavigateToEvent?: () => void;
+}
+
+export interface SoldOutTicketType {
+  id: string;
+  label: string;
+  sublabel?: string;
+  price: number;
+  soldOut: true;
+}
+
+export interface SoldOutEvent {
+  id: string;
+  title: string;
+  eventSeries: string;
+  date: string;
+  time: string;
+  venue: string;
+  location: string;
+  image: string;
+  ticketTypes: SoldOutTicketType[];
 }
