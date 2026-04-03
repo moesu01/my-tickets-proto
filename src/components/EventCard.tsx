@@ -183,7 +183,7 @@ const hslToRgb = (h: number, s: number, l: number) => {
   };
 };
 
-const EventCard: React.FC<EventCardProps> = ({ event }) => {
+const EventCard: React.FC<EventCardProps> = ({ event, onNavigateToEvent }) => {
   const [colors, setColors] = useState<ExtractedColors>({
     base: "rgb(66, 62, 0)",
     primary: "rgba(66, 62, 0, 1)",
@@ -453,7 +453,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
           <Box
             id={`event-card-button-${event.id}`}
             className="event-card-button"
-            onClick={event.onGetTickets}
+            onClick={onNavigateToEvent ?? event.onGetTickets}
             sx={{
               border: `1px solid rgba(255, 255, 255, 0.25)`,
               backgroundColor: 'rgba(255,255,255,0.15)',

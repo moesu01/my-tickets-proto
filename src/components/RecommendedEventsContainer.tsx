@@ -11,6 +11,7 @@ import { transitions } from '../utils/transitions';
 const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
   events,
   isDarkMode = false,
+  onNavigateToEvent,
 }) => {
   const eventsContainerRef = useRef<HTMLDivElement>(null);
   const [isExpanded, setIsExpanded] = useState(true);
@@ -239,7 +240,7 @@ const RecommendedEventsContainer: React.FC<RecommendedEventsContainerProps> = ({
                 flexShrink: 0,
               }}
             >
-              <EventCard event={event} />
+              <EventCard event={event} onNavigateToEvent={onNavigateToEvent} />
             </Box>
           ))}
         </Box>
